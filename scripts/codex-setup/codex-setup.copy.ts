@@ -4,6 +4,7 @@ export const CODEX_SETUP_COPY = Object.freeze({
   wrongDecision: (command: string, expected: string, actual: string): string =>
     `rules: \`${command}\` gives ${actual}, expected ${expected}`,
   rulesUnreadable: (output: string): string => `rules: codex execpolicy check failed:\n${output}`,
+  promptInputFailed: (output: string): string => `prompt: codex debug prompt-input failed:\n${output}`,
   missingFromPrompt: (what: string): string => `prompt: ${what} is not in the model input`,
   unexpectedInPrompt: (what: string): string => `prompt: ${what} is listed although it is explicit-only`,
   instructions: (file: string): string => `the full text of ${file}`,

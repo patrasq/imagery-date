@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { CommandRunner } from '../../.codex/hooks/lib/command-runner.type.ts';
+import { tailText } from '../../.codex/hooks/lib/tail-text.function.ts';
 import { CODEX_SETUP as S } from './codex-setup.constants.ts';
 import { CODEX_SETUP_COPY as COPY } from './codex-setup.copy.ts';
 import { repositorySkills } from './repository-skills.function.ts';
@@ -18,7 +19,9 @@ const agentNames = (root: string): string[] =>
  * implicit skill, every custom agent; and explicit-only skills that are listed anyway.
  */
 export function checkPromptInput(root: string, run: CommandRunner): string[] {
-  const prompt = run(S.promptInput).stdout;
+  const result = run(S.promptInput);
+  if (result.status !== 0) return [COPY.promptInputFailed(tailText(result.stdout + result.stderr))];
+  const prompt = result.stdout;
   const has = (text: string): boolean => prompt.includes(inJson(text));
   const skills = repositorySkills(root);
   return [
