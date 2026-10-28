@@ -1,5 +1,10 @@
 # imagery-date
 
+[![npm](https://img.shields.io/npm/v/imagery-date)](https://www.npmjs.com/package/imagery-date)
+[![verify](https://github.com/patrasq/imagery-date/actions/workflows/verify.yml/badge.svg)](https://github.com/patrasq/imagery-date/actions/workflows/verify.yml)
+[![license](https://img.shields.io/npm/l/imagery-date)](https://github.com/patrasq/imagery-date/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/imagery-date)](https://www.npmjs.com/package/imagery-date)
+
 Look up the capture date of the map imagery at a location. `imagery-date` queries Esri World Imagery, Esri Wayback,
 Bing Maps, IGN France (BD ORTHO), swisstopo (SWISSIMAGE) and Google (Street View, Solar API) and returns each
 provider's date with its precision: day, month, year or date range.
