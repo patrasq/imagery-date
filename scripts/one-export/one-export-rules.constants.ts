@@ -6,6 +6,7 @@ export const ONE_EXPORT_RULES = {
     'packages/imagery-date/scripts',
     'apps/demo/src',
     'scripts',
+    '.codex/hooks',
   ],
   extension: '.ts',
   ignoredPaths: [/(^|\/)node_modules\//, /(^|\/)dist\//, /(^|\/)coverage\//, /\.d\.ts$/],
@@ -15,6 +16,7 @@ export const ONE_EXPORT_RULES = {
     /^packages\/imagery-date\/scripts\/[^/]+\.ts$/,
     /^apps\/demo\/src\/main\.ts$/,
     /^scripts\/[^/]+\.ts$/,
+    /^\.codex\/hooks\/[^/]+\.ts$/,
   ],
   /** The only files allowed to re-export many symbols: the package's two public entry points. */
   barrels: new Set(['packages/imagery-date/src/index.ts', 'packages/imagery-date/src/testing/index.ts']),

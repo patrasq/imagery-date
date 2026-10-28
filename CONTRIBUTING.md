@@ -12,6 +12,7 @@ pnpm test             # unit and recorded tests: no network, seconds
 pnpm test:live        # the keyless providers against the real services
 pnpm record           # re-record provider responses (IMAGERY_DATE_GOOGLE_KEY=… for the Google ones)
 pnpm demo             # the demo page on http://localhost:5173
+pnpm check:codex      # the Codex setup loads as intended (needs `codex` on PATH; see AGENTS.md, Codex)
 ```
 
 A change is finished only when `pnpm verify` passes.
@@ -110,6 +111,13 @@ exports `IgnFranceProvider`; `bing.constants.ts` exports `BING`.
 
 npm authentication: trusted publishing (OIDC) for `patrasq/imagery-date`, workflow `release.yml`. Until that is
 configured on npmjs.com, the workflow uses the `NPM_TOKEN` repository secret (DECISIONS.md D-018).
+
+## Coding agents
+
+[AGENTS.md](AGENTS.md) holds the same rules for coding agents, with commands, reference implementations and the
+review rules Codex code review applies (nested `AGENTS.md` files add rules for their directory). Codex also gets
+skills (`.agents/skills/`), sandbox profiles, command rules, hooks and two read-only checking agents (`.codex/`);
+see AGENTS.md, Codex, and DECISIONS.md D-019. Keep AGENTS.md in step with this file.
 
 ## Working protocol
 

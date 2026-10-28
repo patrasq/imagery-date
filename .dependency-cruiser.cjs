@@ -30,7 +30,16 @@ module.exports = {
       comment: 'A module nothing imports is dead code (entry points, specs and declarations excepted).',
       from: {
         orphan: true,
-        pathNot: [SPEC, '[.]d[.]ts$', '(^|/)index[.]ts$', '/cli[.]ts$', '/main[.]ts$', '^scripts/', '/scripts/'],
+        pathNot: [
+          SPEC,
+          '[.]d[.]ts$',
+          '(^|/)index[.]ts$',
+          '/cli[.]ts$',
+          '/main[.]ts$',
+          '^scripts/',
+          '/scripts/',
+          '^[.]codex/hooks/[^/]+[.]ts$',
+        ],
       },
       to: {},
     },
@@ -92,6 +101,14 @@ module.exports = {
       comment: 'C8: the demo imports the library only through its published entry points, like any user.',
       from: { path: '^apps/demo/src/' },
       to: { path: LIB, pathNot: [`${LIB}index[.]ts$`] },
+    },
+    {
+      name: 'codex-hooks-stand-alone',
+      severity: 'error',
+      comment:
+        'Codex hooks run outside the sandbox, so they import only Node built-ins and .codex/hooks/: no package and no repository code an agent could edit (DECISIONS.md D-019).',
+      from: { path: '^[.]codex/hooks/', pathNot: SPEC },
+      to: { pathNot: '^[.]codex/hooks/', dependencyTypesNot: ['core'] },
     },
     {
       name: 'src-does-not-import-tests',

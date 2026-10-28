@@ -1,0 +1,30 @@
+{
+  "description": "imagery-date: Codex finishes only with verified changes. Scripts: .codex/hooks/*.ts (AGENTS.md, Codex).",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/session-start.ts\"",
+            "timeout": 10,
+            "statusMessage": "Checking Node and dependencies"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/stop.ts\"",
+            "timeout": 10,
+            "statusMessage": "Checking that the changes passed pnpm verify"
+          }
+        ]
+      }
+    ]
+  }
+}

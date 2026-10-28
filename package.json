@@ -15,13 +15,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:one-export": "node scripts/check-one-export.ts",
-    "check:deps": "depcruise packages/imagery-date/src apps/demo/src scripts --config .dependency-cruiser.cjs",
+    "check:deps": "depcruise packages/imagery-date/src apps/demo/src scripts .codex/hooks --config .dependency-cruiser.cjs",
+    "check:codex": "node scripts/check-codex-setup.ts",
     "test": "vitest run --project unit --project recorded",
     "test:coverage": "vitest run --project unit --project recorded --coverage",
     "test:live": "vitest run --project live",
     "record": "pnpm --filter imagery-date run record",
     "demo": "pnpm --filter imagery-date-demo run dev",
-    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm check:one-export && pnpm check:deps && pnpm test:coverage && pnpm build"
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm check:one-export && pnpm check:deps && pnpm test:coverage && pnpm build && node scripts/record-verified-tree.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -33,6 +34,7 @@
     "prettier": "3.9.10",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",
-    "vitest": "5.0.5"
+    "vitest": "5.0.5",
+    "zod": "4.6.7"
   }
 }

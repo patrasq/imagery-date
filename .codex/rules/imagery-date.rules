@@ -1,0 +1,94 @@
+# Codex command rules for imagery-date (execpolicy, Starlark). They decide what happens when Codex asks to run a
+# command outside the sandbox: "prompt" asks you each time, "forbidden" refuses. The strictest matching rule wins.
+# Nothing here is "allow": the gates (pnpm verify, test, lint, ...) run inside the sandbox without asking, and
+# "allow" would run agent-edited code outside it.
+# `match` / `not_match` are examples Codex checks when it loads this file; .github/workflows/codex.yml also runs
+# `codex execpolicy check` on the cases in scripts/codex-setup/rule-cases.constants.ts.
+
+# Calls to third-party servers. In the sandbox use `/permissions imagery-date-record` instead of escalating.
+prefix_rule(
+    pattern = ["pnpm", ["record", "test:live"]],
+    decision = "prompt",
+    justification = "Calls the providers' live servers. Run it only when the task asks for it, preferably inside the sandbox with `/permissions imagery-date-record`.",
+    match = ["pnpm record", "pnpm test:live"],
+    not_match = ["pnpm test", "pnpm verify"],
+)
+
+prefix_rule(
+    pattern = ["pnpm", "--filter", "imagery-date", "run", "record"],
+    decision = "prompt",
+    justification = "Same as `pnpm record`.",
+)
+
+# Releases are cut by the maintainer (CONTRIBUTING.md, Releasing).
+prefix_rule(
+    pattern = [["npm", "pnpm"], "publish"],
+    decision = "forbidden",
+    justification = "Releases are published by .github/workflows/release.yml from a tag the maintainer pushes. Prepare the release commit with the prepare-release skill.",
+    match = ["npm publish", "pnpm publish --access public"],
+)
+
+prefix_rule(
+    pattern = ["git", "tag"],
+    decision = "forbidden",
+    justification = "A pushed v* tag publishes to npm; the maintainer tags releases. To list tags, use `git for-each-ref refs/tags`.",
+    match = ["git tag v0.2.0", "git tag -d v0.1.0"],
+)
+
+prefix_rule(
+    pattern = ["gh", "release"],
+    decision = "forbidden",
+    justification = "The maintainer cuts releases.",
+)
+
+prefix_rule(
+    pattern = [["npm", "pnpm"], ["token", "login", "adduser", "owner", "dist-tag", "deprecate", "unpublish"]],
+    decision = "forbidden",
+    justification = "npm account and package administration is the maintainer's.",
+    match = ["npm token create", "pnpm dist-tag add imagery-date@0.1.0 latest"],
+)
+
+prefix_rule(
+    pattern = ["gh", ["secret", "auth", "repo", "variable"]],
+    decision = "forbidden",
+    justification = "Repository secrets, settings and credentials are the maintainer's.",
+    match = ["gh secret set NPM_TOKEN", "gh repo edit --visibility private"],
+    not_match = ["gh pr view 12"],
+)
+
+# History that others may have pulled.
+prefix_rule(
+    pattern = ["git", "push", ["--force", "-f", "--force-with-lease", "--mirror", "--delete", "--tags"]],
+    decision = "forbidden",
+    justification = "Rewrites or deletes published history, or pushes tags (which publishes). Push new commits instead.",
+    match = ["git push --force origin main", "git push --tags"],
+)
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Pushing publishes the commits; the maintainer decides when.",
+    match = ["git push origin main"],
+)
+
+prefix_rule(
+    pattern = ["git", "commit", ["--no-verify", "-n"]],
+    decision = "forbidden",
+    justification = "Commits must pass the checks. Fix the failure instead.",
+)
+
+prefix_rule(
+    pattern = ["git", ["reset", "clean", "checkout", "restore"], ["--hard", "-f", "-fd", "-fdx", "--", "."]],
+    decision = "prompt",
+    justification = "Discards uncommitted work that may be the user's.",
+    match = ["git reset --hard", "git clean -fdx", "git checkout -- src/index.ts", "git restore ."],
+    not_match = ["git checkout main", "git restore --staged AGENTS.md"],
+)
+
+# Other package managers would write a second lockfile.
+prefix_rule(
+    pattern = [["npm", "yarn", "bun"], ["install", "i", "add", "ci"]],
+    decision = "forbidden",
+    justification = "This workspace uses pnpm only (pnpm-lock.yaml). Use `pnpm install` or `pnpm add`.",
+    match = ["npm install", "yarn add zod", "bun i"],
+)

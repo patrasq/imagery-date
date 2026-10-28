@@ -142,7 +142,8 @@ pnpm record       # re-record provider responses (IMAGERY_DATE_GOOGLE_KEY for th
 pnpm demo         # demo on http://localhost:5173
 ```
 
-Rules: [CONTRIBUTING.md](CONTRIBUTING.md). Design decisions: [DECISIONS.md](DECISIONS.md).
+Rules: [CONTRIBUTING.md](CONTRIBUTING.md). Design decisions: [DECISIONS.md](DECISIONS.md). Coding agents:
+[AGENTS.md](AGENTS.md).
 
 ## License
 

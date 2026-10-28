@@ -111,3 +111,33 @@ with "bypass 2FA" (checked 2026-10-28). Such tokens keep direct publish access u
 `NPM_TOKEN` secret, so the token never leaves npmjs.com and GitHub; trusted publishing (OIDC) is then configured for
 `release.yml` on the package's npm settings, and the secret and token are deleted. Trusted publishing needs npm 11.5.1
 or later, so the workflow installs npm 11.21.0. Provenance is attached to every release.
+
+## D-019 · Codex setup: gates inside the sandbox, checked against a real Codex
+
+The repository carries instructions and configuration for coding agents (AGENTS.md, `.agents/skills`, `.codex/`),
+written for Codex 0.165 and checked against it (2026-10-28).
+
+- Commands run under a permission profile that writes only inside the checkout, cannot read `.env` files and reaches
+  no host; a second profile, chosen by hand, reaches only the hosts in `test/recordings/`. The rules file has no
+  `allow` rule, because `allow` runs a command outside the sandbox and the gates execute code the agent edited.
+- Keys are removed from the environment of every command Codex runs, so recording the billed Google providers stays
+  with the maintainer.
+- Hooks run outside the sandbox. A hook that ran the gates, ESLint or anything from `node_modules` would run code
+  the agent can edit, unsandboxed; so would a hook script the agent can edit. The hooks are therefore TypeScript in
+  `.codex/` (read-only to sandboxed commands), import only Node built-ins (dependency rule `codex-hooks-stand-alone`)
+  and only read git state and files. The agent runs `pnpm verify` itself, in the sandbox; its last step records the
+  verified tree, and the Stop hook asks for a run when the session changed the tree since. It continues a turn at
+  most once, so it cannot loop. Every repository rule and test covers the hook code.
+- `pnpm check:codex` (CI: `codex.yml`) loads the setup in the pinned Codex without a login: `--strict-config` with a
+  provider that does not exist (config loads, then Codex stops), `codex execpolicy check` on fixed cases,
+  `codex debug prompt-input` for the instructions, skills and agents, and each hook command on a sample input. A
+  weekly run against the newest Codex reports format changes.
+- Model, provider and profiles are not set: a project file may not set provider or profiles, and a pinned model would
+  override each contributor's choice.
+
+## D-020 · Loopback requests in tests bypass HTTP proxies
+
+The FetchHttpClient spec talks to a local server. When the environment routes Node's `fetch` through a proxy (a
+corporate proxy, or the Codex sandbox, which sets `NODE_USE_ENV_PROXY=1` and a proxy that refuses loopback), that
+spec failed. `vitest.config.ts` adds `127.0.0.1` and `localhost` to `NO_PROXY` before workers start; no other request
+is affected.

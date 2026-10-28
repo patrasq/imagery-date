@@ -1,0 +1,55 @@
+name: codex
+
+# Loads the repository's Codex setup (AGENTS.md, .codex/ with its hooks, .agents/skills) in a real Codex and fails
+# if Codex would not use it as intended: `pnpm check:codex`. On pushes and pull requests it uses the version pinned
+# below; once a week it also tries the newest Codex, so a release that changes the formats shows up here first.
+on:
+  push:
+    paths:
+      - '**/AGENTS.md'
+      - '.agents/**'
+      - '.codex/**'
+      - 'scripts/check-codex-setup.ts'
+      - 'scripts/codex-setup/**'
+      - 'scripts/record-verified-tree.ts'
+      - 'package.json'
+      - 'vitest.config.ts'
+      - '.github/workflows/codex.yml'
+  pull_request:
+    paths:
+      - '**/AGENTS.md'
+      - '.agents/**'
+      - '.codex/**'
+      - 'scripts/check-codex-setup.ts'
+      - 'scripts/codex-setup/**'
+      - 'scripts/record-verified-tree.ts'
+      - 'package.json'
+      - 'vitest.config.ts'
+      - '.github/workflows/codex.yml'
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CODEX_VERSION: 0.165.0
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install Codex
+        run: npm install --global "@openai/codex@${{ github.event_name == 'schedule' && 'latest' || env.CODEX_VERSION }}"
+      - run: codex --version
+      # No login and no network: strict config, rule decisions, model input, hooks on sample input.
+      - run: pnpm check:codex

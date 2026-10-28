@@ -1,0 +1,27 @@
+// Commands and the decision .codex/rules/imagery-date.rules must give them (`none`: no rule matches, so the command
+// runs in the sandbox like any other).
+export const RULE_CASES = Object.freeze([
+  { command: 'pnpm verify', decision: 'none' },
+  { command: 'pnpm test', decision: 'none' },
+  { command: 'pnpm exec vitest run scripts', decision: 'none' },
+  { command: 'pnpm record', decision: 'prompt' },
+  { command: 'pnpm test:live', decision: 'prompt' },
+  { command: 'pnpm --filter imagery-date run record', decision: 'prompt' },
+  { command: 'git push origin main', decision: 'prompt' },
+  { command: 'git reset --hard', decision: 'prompt' },
+  { command: 'git checkout -- AGENTS.md', decision: 'prompt' },
+  { command: 'git checkout main', decision: 'none' },
+  { command: 'git status', decision: 'none' },
+  { command: 'git push --force origin main', decision: 'forbidden' },
+  { command: 'git push --tags', decision: 'forbidden' },
+  { command: 'git commit --no-verify -m x', decision: 'forbidden' },
+  { command: 'git tag v0.2.0', decision: 'forbidden' },
+  { command: 'npm publish', decision: 'forbidden' },
+  { command: 'pnpm publish --access public', decision: 'forbidden' },
+  { command: 'gh release create v0.2.0', decision: 'forbidden' },
+  { command: 'gh secret set NPM_TOKEN', decision: 'forbidden' },
+  { command: 'npm token create', decision: 'forbidden' },
+  { command: 'npm install', decision: 'forbidden' },
+  { command: 'yarn add zod', decision: 'forbidden' },
+  { command: 'gh pr view 1', decision: 'none' },
+] as const);

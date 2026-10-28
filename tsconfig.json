@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["scripts", "*.config.ts"]
+  "include": ["scripts", ".codex/hooks", "*.config.ts"]
 }

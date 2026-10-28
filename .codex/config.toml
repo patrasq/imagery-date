@@ -1,0 +1,60 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Codex project settings for imagery-date (Codex 0.165 or later). Codex loads this file, hooks.json, rules/ and
+# agents/ only after you mark the repository as trusted; AGENTS.md and .agents/skills load either way.
+# .github/workflows/codex.yml checks the whole setup against the Codex version pinned there.
+# Model, provider and profiles stay in your ~/.codex/config.toml: a project file may not set them.
+
+# Commands Codex runs may write only inside the checkout (.git, .codex and .agents stay read-only), cannot read
+# .env files, and reach no host on the network: the proxy allows no domain, and vitest.config.ts sends loopback
+# requests (the local test servers) around it.
+default_permissions = "imagery-date"
+
+[permissions.imagery-date]
+description = "Edit and test imagery-date: writes inside the checkout, no .env files, no network."
+extends = ":workspace"
+
+[permissions.imagery-date.network]
+enabled = true
+
+[permissions.imagery-date.filesystem.":workspace_roots"]
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+
+# For `pnpm record` and `pnpm test:live` (`/permissions imagery-date-record`): the hosts the keyless providers call,
+# as listed in test/recordings, and no others. The Google hosts are left out: see shell_environment_policy.
+[permissions.imagery-date-record]
+description = "Record keyless provider responses: network to the provider hosts only."
+extends = "imagery-date"
+
+[permissions.imagery-date-record.network]
+enabled = true
+
+[permissions.imagery-date-record.network.domains]
+"data.geopf.fr" = "allow"
+"api3.geo.admin.ch" = "allow"
+"services.arcgisonline.com" = "allow"
+"ecn.t0.tiles.virtualearth.net" = "allow"
+"s3-us-west-2.amazonaws.com" = "allow"
+"wayback.maptiles.arcgis.com" = "allow"
+"metadata.maptiles.arcgis.com" = "allow"
+
+[features]
+# Enforces the domain lists above.
+network_proxy = true
+
+# Keys never reach the commands Codex runs, so an agent can neither print the Google key nor spend it. To record
+# the Google providers, run `IMAGERY_DATE_GOOGLE_KEY=… pnpm record` yourself. `ignore_default_excludes = false`
+# also drops every other variable whose name contains KEY, SECRET or TOKEN.
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = false
+
+[shell_environment_policy.filters]
+"IMAGERY_DATE_GOOGLE_KEY" = "exclude"
+"NPM_TOKEN" = "exclude"
+"NODE_AUTH_TOKEN" = "exclude"
+"GH_TOKEN" = "exclude"
+"GITHUB_TOKEN" = "exclude"
+
+[agents]
+max_concurrent_threads_per_session = 4

@@ -2,6 +2,13 @@ import { defineConfig } from 'vitest/config';
 
 const LIB = 'packages/imagery-date';
 
+// Specs that start a local HTTP server reach it directly, never through an HTTP proxy from the environment (a
+// corporate proxy, or the Codex sandbox, which sets NODE_USE_ENV_PROXY). Node reads these when a worker starts.
+const LOOPBACK = ['127.0.0.1', 'localhost'];
+for (const name of ['NO_PROXY', 'no_proxy']) {
+  process.env[name] = [process.env[name], ...LOOPBACK].filter(Boolean).join(',');
+}
+
 export default defineConfig({
   resolve: { conditions: ['source'] },
   ssr: { resolve: { conditions: ['source'], externalConditions: ['source'] } },
@@ -13,7 +20,12 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'unit',
-          include: [`${LIB}/src/**/*.spec.ts`, 'scripts/**/*.spec.ts', 'apps/demo/src/**/*.spec.ts'],
+          include: [
+            `${LIB}/src/**/*.spec.ts`,
+            'scripts/**/*.spec.ts',
+            '.codex/hooks/**/*.spec.ts',
+            'apps/demo/src/**/*.spec.ts',
+          ],
         },
       },
       {
