@@ -1,0 +1,23 @@
+{
+  "name": "Palace of the Parliament, Bucharest",
+  "recordedAt": "2026-10-28T13:40:04.162Z",
+  "latitude": 44.4275,
+  "longitude": 26.0874,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://solar.googleapis.com/v1/buildingInsights:findClosest?fields=imageryDate%2CimageryQuality%2Ccenter&location.latitude=44.4275&location.longitude=26.0874&requiredQuality=LOW"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": "{\n  \"center\": {\n    \"latitude\": 44.4274658,\n    \"longitude\": 26.087427\n  },\n  \"imageryDate\": {\n    \"year\": 2021,\n    \"month\": 7,\n    \"day\": 28\n  },\n  \"imageryQuality\": \"HIGH\"\n}\n"
+      },
+      "failure": null
+    }
+  ]
+}

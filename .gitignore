@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+# copied into the package at pack time from the repository root
+packages/imagery-date/LICENSE
+packages/imagery-date/README.md

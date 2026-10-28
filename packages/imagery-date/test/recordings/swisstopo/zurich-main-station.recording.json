@@ -1,0 +1,23 @@
+{
+  "name": "Zürich main station",
+  "recordedAt": "2026-10-28T13:38:59.870Z",
+  "latitude": 47.3779,
+  "longitude": 8.5403,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://api3.geo.admin.ch/rest/services/all/MapServer/identify?geometry=8.5403%2C47.3779&geometryType=esriGeometryPoint&imageDisplay=100%2C100%2C96&layers=all%3Ach.swisstopo.images-swissimage-dop10.metadata&mapExtent=8.5303%2C47.3679%2C8.5503%2C47.387899999999995&returnGeometry=false&sr=4326&tolerance=0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": "{\"results\": [{\"layerBodId\": \"ch.swisstopo.images-swissimage-dop10.metadata\", \"layerName\": \"Einteilung SWISSIMAGE 10 cm Raster\", \"featureId\": \"2683_1248\", \"id\": \"2683_1248\", \"attributes\": {\"datenstand\": \"2025\", \"resolution\": \"10 cm\", \"label\": \"2683_1248\"}}]}"
+      },
+      "failure": null
+    }
+  ]
+}

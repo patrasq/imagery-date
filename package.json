@@ -1,0 +1,38 @@
+{
+  "name": "imagery-date-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "When was the map photo at this point taken? Capture dates from every imagery provider, side by side.",
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=22.12.0 <23"
+  },
+  "scripts": {
+    "build": "pnpm --recursive --filter ./packages/* --filter ./apps/* run build",
+    "typecheck": "pnpm --recursive run typecheck && tsc --noEmit -p tsconfig.json",
+    "lint": "eslint --max-warnings 0 .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:one-export": "node scripts/check-one-export.ts",
+    "check:deps": "depcruise packages/imagery-date/src apps/web/src scripts --config .dependency-cruiser.cjs",
+    "test": "vitest run --project unit --project recorded",
+    "test:coverage": "vitest run --project unit --project recorded --coverage",
+    "test:live": "vitest run --project live",
+    "record": "pnpm --filter imagery-date run record",
+    "web": "pnpm --filter imagery-date-web run dev",
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm check:one-export && pnpm check:deps && pnpm test:coverage && pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.5",
+    "@vitest/coverage-v8": "5.0.5",
+    "dependency-cruiser": "18.6.0",
+    "eslint": "10.13.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.0",
+    "vitest": "5.0.5"
+  }
+}

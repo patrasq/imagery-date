@@ -1,0 +1,23 @@
+{
+  "name": "A street in Paris 14e (a Google panorama)",
+  "recordedAt": "2026-10-28T13:54:09.766Z",
+  "latitude": 48.8335,
+  "longitude": 2.327,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://maps.googleapis.com/maps/api/streetview/metadata?location=48.8335%2C2.327&radius=50&source=outdoor"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": "{\n   \"copyright\" : \"© 2026 Google\",\n   \"date\" : \"2025-07\",\n   \"location\" : \n   {\n      \"lat\" : 48.8334382103999,\n      \"lng\" : 2.327141886084568\n   },\n   \"pano_id\" : \"TU6VO4m6uRvPTvNfvlOv5w\",\n   \"status\" : \"OK\"\n}"
+      },
+      "failure": null
+    }
+  ]
+}

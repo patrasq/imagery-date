@@ -1,0 +1,23 @@
+{
+  "name": "Notre-Dame de Paris",
+  "recordedAt": "2026-10-28T13:54:09.326Z",
+  "latitude": 48.853,
+  "longitude": 2.3499,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://data.geopf.fr/wfs/ows?BBOX=48.852995%2C2.349895%2C48.853005%2C2.3499049999999997%2Curn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A4326&COUNT=10&OUTPUTFORMAT=application%2Fjson&PROPERTYNAME=date_vol%2Cres%2Cpva&REQUEST=GetFeature&SERVICE=WFS&TYPENAMES=ORTHOIMAGERY.ORTHOPHOTOS.GRAPHE-MOSAIQUAGE%3Agraphe_bdortho&VERSION=2.0.0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json;charset=UTF-8"
+        },
+        "body": "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"id\":\"graphe_bdortho.637\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}},{\"type\":\"Feature\",\"id\":\"graphe_bdortho.1173\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}},{\"type\":\"Feature\",\"id\":\"graphe_bdortho.1221\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}},{\"type\":\"Feature\",\"id\":\"graphe_bdortho.1573\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}},{\"type\":\"Feature\",\"id\":\"graphe_bdortho.246\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}},{\"type\":\"Feature\",\"id\":\"graphe_bdortho.456\",\"geometry\":null,\"properties\":{\"pva\":2024,\"res\":20,\"date_vol\":\"2024-08-27Z\"}}],\"totalFeatures\":6,\"numberMatched\":6,\"numberReturned\":6,\"timeStamp\":\"2026-10-28T13:54:09.635Z\",\"crs\":null}"
+      },
+      "failure": null
+    }
+  ]
+}

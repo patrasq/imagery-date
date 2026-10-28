@@ -1,0 +1,27 @@
+name: release
+
+# Publishes imagery-date to npm with provenance when a version tag (v0.1.1, …) is pushed. The first version is published
+# by hand; after it, npm's trusted publishing for this repository and workflow replaces any token.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify
+      - run: pnpm --filter imagery-date publish --access public --provenance --no-git-checks

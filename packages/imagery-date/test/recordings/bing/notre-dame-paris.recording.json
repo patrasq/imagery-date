@@ -1,0 +1,26 @@
+{
+  "name": "Notre-Dame de Paris",
+  "recordedAt": "2026-10-28T13:39:00.659Z",
+  "latitude": 48.853,
+  "longitude": 2.3499,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "HEAD",
+        "url": "https://ecn.t0.tiles.virtualearth.net/tiles/a1202200110121033112.jpeg?g=15000"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "image/jpeg",
+          "x-ve-tilemeta-capturedatemaxyymm": "2110",
+          "x-ve-tilemeta-capturedatesrange": "6/16/2021-10/8/2021",
+          "x-ve-tilemeta-product-ids": "46"
+        },
+        "body": ""
+      },
+      "failure": null
+    }
+  ]
+}

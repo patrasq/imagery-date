@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>imagery-date</title>
+    <meta
+      name="description"
+      content="Click the map and see when each provider's photo there was taken: IGN France, swisstopo, Esri, Bing and Google, side by side."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='6' width='26' height='22' rx='4' fill='%232f6f5e'/%3E%3Crect x='3' y='6' width='26' height='7' rx='3' fill='%23173b32'/%3E%3Ccircle cx='16' cy='20' r='4' fill='%23fff'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <main class="layout">
+      <aside class="panel">
+        <header class="intro">
+          <h1>When was this map photo taken?</h1>
+          <p>
+            Click anywhere on the map. Every provider says when the photo it shows there was taken, exactly as precisely
+            as it publishes it.
+          </p>
+        </header>
+
+        <form id="options" class="options" autocomplete="off">
+          <label class="field">
+            <span>Zoom</span>
+            <select id="zoom">
+              <option value="17">17 · neighbourhood</option>
+              <option value="18">18 · street</option>
+              <option value="19" selected>19 · building</option>
+              <option value="20">20 · roof</option>
+              <option value="21">21 · detail</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Google Maps Platform key <small>optional, adds Street View</small></span>
+            <input id="google-key" type="password" spellcheck="false" placeholder="AIza…" />
+          </label>
+          <label class="check"><input id="remember-key" type="checkbox" /> Remember the key on this device</label>
+          <label class="check"
+            ><input id="solar" type="checkbox" /> Also ask the Google Solar API (Google bills it)</label
+          >
+        </form>
+
+        <button id="history" class="history" type="button" disabled>Every Esri photo here since 2014</button>
+
+        <section id="results" class="results" aria-live="polite"></section>
+
+        <footer class="footnote">
+          <p>A capture date is when the photo was taken, not proof the place still looks like that.</p>
+          <p>
+            Requests go from your browser straight to each provider; a key never leaves it except to Google.
+            <a href="https://github.com/patrasq/imagery-date">Source, library and CLI</a> ·
+            <a href="https://github.com/patrasq/imagery-date/blob/main/PROVIDERS.md">Each provider's terms</a>
+          </p>
+        </footer>
+      </aside>
+      <div id="map" class="map" role="application" aria-label="Map: click a point to date its imagery"></div>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

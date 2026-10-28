@@ -1,0 +1,23 @@
+{
+  "name": "Copenhagen City Hall",
+  "recordedAt": "2026-10-28T13:39:00.199Z",
+  "latitude": 55.6761,
+  "longitude": 12.5683,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/4/query?f=json&geometry=12.5683%2C55.6761&geometryType=esriGeometryPoint&inSR=4326&outFields=SRC_DATE%2CSRC_RES%2CNICE_NAME%2CMinMapLevel%2CMaxMapLevel&returnGeometry=false"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json;charset=UTF-8"
+        },
+        "body": "{\"displayFieldName\":\"NICE_NAME\",\"fieldAliases\":{\"SRC_DATE\":\"DATE (YYYYMMDD)\",\"SRC_RES\":\"RESOLUTION (M)\",\"NICE_NAME\":\"SOURCE_INFO\",\"MinMapLevel\":\"FROM_CACHE_LEVEL\",\"MaxMapLevel\":\"TO_CACHE_LEVEL\"},\"fields\":[{\"name\":\"SRC_DATE\",\"type\":\"esriFieldTypeInteger\",\"alias\":\"DATE (YYYYMMDD)\"},{\"name\":\"SRC_RES\",\"type\":\"esriFieldTypeDouble\",\"alias\":\"RESOLUTION (M)\"},{\"name\":\"NICE_NAME\",\"type\":\"esriFieldTypeString\",\"alias\":\"SOURCE_INFO\",\"length\":50},{\"name\":\"MinMapLevel\",\"type\":\"esriFieldTypeSmallInteger\",\"alias\":\"FROM_CACHE_LEVEL\"},{\"name\":\"MaxMapLevel\",\"type\":\"esriFieldTypeSmallInteger\",\"alias\":\"TO_CACHE_LEVEL\"}],\"features\":[{\"attributes\":{\"SRC_DATE\":null,\"SRC_RES\":15,\"NICE_NAME\":\"TerraColor NextGen\",\"MinMapLevel\":0,\"MaxMapLevel\":11}},{\"attributes\":{\"SRC_DATE\":20250321,\"SRC_RES\":0.5,\"NICE_NAME\":\"Vivid Advanced\",\"MinMapLevel\":12,\"MaxMapLevel\":18}},{\"attributes\":{\"SRC_DATE\":20120115,\"SRC_RES\":0.10000000149011612,\"NICE_NAME\":\"Denmark_2012\",\"MinMapLevel\":20,\"MaxMapLevel\":20}},{\"attributes\":{\"SRC_DATE\":20250321,\"SRC_RES\":0.5,\"NICE_NAME\":\"Vivid Advanced\",\"MinMapLevel\":19,\"MaxMapLevel\":19}}]}"
+      },
+      "failure": null
+    }
+  ]
+}

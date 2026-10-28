@@ -1,0 +1,23 @@
+{
+  "name": "Paris 15e (a contributed photo sphere)",
+  "recordedAt": "2026-10-28T13:54:09.969Z",
+  "latitude": 48.8414,
+  "longitude": 2.2995,
+  "zoom": 19,
+  "exchanges": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://maps.googleapis.com/maps/api/streetview/metadata?location=48.8414%2C2.2995&radius=50&source=outdoor"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": "{\n   \"copyright\" : \"© Go360\",\n   \"date\" : \"2024-12\",\n   \"location\" : \n   {\n      \"lat\" : 48.84135869617197,\n      \"lng\" : 2.299303065924859\n   },\n   \"pano_id\" : \"CAoSFkNJSE0wb2dLRUlDQWdJQ3Y3WWlUZnc.\",\n   \"status\" : \"OK\"\n}"
+      },
+      "failure": null
+    }
+  ]
+}

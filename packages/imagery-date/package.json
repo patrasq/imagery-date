@@ -1,0 +1,65 @@
+{
+  "name": "imagery-date",
+  "version": "0.1.0",
+  "description": "When was the map photo at this point taken? Capture dates from Esri, Bing, IGN France, swisstopo and Google, side by side, with their precision.",
+  "keywords": [
+    "imagery",
+    "satellite",
+    "aerial",
+    "orthophoto",
+    "capture date",
+    "vintage",
+    "esri",
+    "wayback",
+    "bing",
+    "street view",
+    "openstreetmap",
+    "osint",
+    "gis"
+  ],
+  "license": "MIT",
+  "author": "Andrei-Dragoș Pătrașcu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrasq/imagery-date.git",
+    "directory": "packages/imagery-date"
+  },
+  "homepage": "https://github.com/patrasq/imagery-date#readme",
+  "bugs": "https://github.com/patrasq/imagery-date/issues",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.10"
+  },
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./testing": {
+      "source": "./src/testing/index.ts",
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "imagery-date": "./dist/interface/cli/cli.js"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.spec.*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "record": "node scripts/record-provider-responses.ts",
+    "prepack": "cp ../../README.md ../../LICENSE . && pnpm build"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

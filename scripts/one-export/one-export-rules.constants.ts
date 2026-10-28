@@ -1,0 +1,57 @@
+// What the one-export checker (rule C1) scans and accepts. CONTRIBUTING.md, File names, lists the same suffixes.
+export const ONE_EXPORT_RULES = {
+  roots: [
+    'packages/imagery-date/src',
+    'packages/imagery-date/test',
+    'packages/imagery-date/scripts',
+    'apps/web/src',
+    'scripts',
+  ],
+  extension: '.ts',
+  ignoredPaths: [/(^|\/)node_modules\//, /(^|\/)dist\//, /(^|\/)coverage\//, /\.d\.ts$/],
+  /** Process entry points: run for their side effects and export nothing. */
+  entryPaths: [
+    /^packages\/imagery-date\/src\/interface\/cli\/cli\.ts$/,
+    /^packages\/imagery-date\/scripts\/[^/]+\.ts$/,
+    /^apps\/web\/src\/main\.ts$/,
+    /^scripts\/[^/]+\.ts$/,
+  ],
+  /** The only files allowed to re-export many symbols: the package's two public entry points. */
+  barrels: new Set(['packages/imagery-date/src/index.ts', 'packages/imagery-date/src/testing/index.ts']),
+  testSuffix: '.spec.ts',
+  roleSuffixes: new Set([
+    'value-object',
+    'interface',
+    'enum',
+    'type',
+    'error',
+    'port',
+    'service',
+    'provider',
+    'adapter',
+    'mapper',
+    'schema',
+    'constants',
+    'copy',
+    'map',
+    'function',
+    'config',
+    'fake',
+    'fixture',
+  ]),
+  /** Words an exported name may add after the file's base name: IgnFranceProvider in ign-france.provider.ts. */
+  roleWords: new Set([
+    'value',
+    'schema',
+    'error',
+    'service',
+    'provider',
+    'adapter',
+    'mapper',
+    'map',
+    'copy',
+    'config',
+    'fixture',
+    'type',
+  ]),
+} as const;
