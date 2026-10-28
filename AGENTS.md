@@ -229,7 +229,8 @@ types and layers are checked by `pnpm verify`; do not comment on them.
 
 The repository is set up for Codex 0.165 or later. `pnpm check:codex` (CI: `.github/workflows/codex.yml`, with the
 Codex version it pins) loads the whole setup in Codex: strict config, rule decisions, the model input with these
-instructions, the skills and the custom agents, and each hook on a sample input.
+instructions, the skills and the custom agents, the tests inside the permission profile, and each hook on a sample
+input.
 
 | Path                   | What it does                                                                                   | Loads             |
 | ---------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |

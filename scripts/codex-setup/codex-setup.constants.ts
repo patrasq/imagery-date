@@ -29,6 +29,15 @@ export const CODEX_SETUP = Object.freeze({
   agentFile: /\.toml$/,
   agentName: /^name\s*=\s*"([^"]+)"/m,
   listedRole: (name: string): string => `${name}: {`,
+  /** The gates' tests inside the default permission profile, and a host no profile allows. */
+  sandboxTests: ['codex', 'sandbox', '-P', 'imagery-date', '--', 'pnpm', '-s', 'test'],
+  sandbox: (profile: string): string[] => ['codex', 'sandbox', '-P', profile, '--'],
+  profiles: Object.freeze(['imagery-date', 'imagery-date-record']),
+  blockedHostProbe: Object.freeze([
+    'node',
+    '-e',
+    "fetch('https://registry.npmjs.org/').then(() => process.exit(1), () => process.exit(0))",
+  ]),
   hooksFile: '.codex/hooks.json',
   commandHandler: 'command',
   shell: Object.freeze(['sh', '-c']),

@@ -1,6 +1,6 @@
 // Loads this repository's Codex setup in the installed Codex and fails on any part Codex would not use as intended:
-// strict config, rule decisions, instructions, skills, custom agents and hooks. Run with `pnpm check:codex`
-// (CI: .github/workflows/codex.yml). Needs `codex` on PATH; no login and no network.
+// strict config, rule decisions, instructions, skills, custom agents, permission profiles and hooks. Run with `pnpm check:codex`
+// (CI: .github/workflows/codex.yml). Needs `codex` on PATH and its Linux sandbox; no login and no network.
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -9,11 +9,11 @@ import { runCommand } from '../.codex/hooks/lib/run-command.function.ts';
 import { checkHooks } from './codex-setup/check-hooks.function.ts';
 import { checkPromptInput } from './codex-setup/check-prompt-input.function.ts';
 import { checkRuleCases } from './codex-setup/check-rule-cases.function.ts';
+import { checkSandbox } from './codex-setup/check-sandbox.function.ts';
 import { checkStrictConfig } from './codex-setup/check-strict-config.function.ts';
 import { CODEX_SETUP_CONFIG } from './codex-setup/codex-setup.config.ts';
 import { CODEX_SETUP as S } from './codex-setup/codex-setup.constants.ts';
 import { CODEX_SETUP_COPY as COPY } from './codex-setup/codex-setup.copy.ts';
-import { RULE_CASES } from './codex-setup/rule-cases.constants.ts';
 
 const root = process.cwd();
 const home = mkdtempSync(join(tmpdir(), S.temporaryPrefix));
@@ -26,6 +26,7 @@ const problems = [
   ...checkStrictConfig(run),
   ...checkRuleCases(run),
   ...checkPromptInput(root, run),
+  ...checkSandbox(run),
   ...checkHooks(root, shell),
 ];
 const version = run(S.version).stdout;
@@ -36,5 +37,5 @@ if (problems.length > 0) {
   process.stderr.write(COPY.summary(problems.length));
   process.exitCode = 1;
 } else {
-  process.stdout.write(COPY.ok(version, RULE_CASES.length + S.instructionFiles.length));
+  process.stdout.write(COPY.ok(version));
 }

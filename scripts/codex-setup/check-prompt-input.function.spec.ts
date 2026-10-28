@@ -4,6 +4,7 @@ import type { CommandResult } from '../../.codex/hooks/lib/command-result.interf
 import { checkHooks } from './check-hooks.function.ts';
 import { checkPromptInput } from './check-prompt-input.function.ts';
 import { checkRuleCases } from './check-rule-cases.function.ts';
+import { checkSandbox } from './check-sandbox.function.ts';
 import { RULE_CASES } from './rule-cases.constants.ts';
 
 const result = (stdout: string, status: number | null = 0): CommandResult => ({ status, stdout, stderr: '' });
@@ -66,5 +67,20 @@ describe(checkHooks.name, () => {
     const problems = checkHooks('.', (command) => (command.includes('stop') ? result('', 1) : result('hello')));
     expect(problems).toHaveLength(2);
     expect(problems[0]).toContain('printed non-JSON');
+  });
+});
+
+describe(checkSandbox.name, () => {
+  it('accepts passing tests in the default profile and a blocked host in both profiles', () => {
+    expect(checkSandbox(() => result(''))).toEqual([]);
+  });
+
+  it('reports failing tests and a profile that reached the host', () => {
+    const run = (command: readonly string[]): CommandResult =>
+      command.includes('test') || command.includes('imagery-date-record') ? result('1 failed', 1) : result('');
+    expect(checkSandbox(run)).toEqual([
+      'sandbox: pnpm test fails in the imagery-date profile:\n1 failed',
+      'sandbox: the imagery-date-record profile reached registry.npmjs.org',
+    ]);
   });
 });

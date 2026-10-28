@@ -51,5 +51,7 @@ jobs:
       - name: Install Codex
         run: npm install --global "@openai/codex@${{ github.event_name == 'schedule' && 'latest' || env.CODEX_VERSION }}"
       - run: codex --version
-      # No login and no network: strict config, rule decisions, model input, hooks on sample input.
+      # Codex's Linux sandbox (bubblewrap) needs unprivileged user namespaces, which Ubuntu 24.04 restricts.
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      # No login and no network: strict config, rule decisions, model input, sandbox profiles, hooks on sample input.
       - run: pnpm check:codex

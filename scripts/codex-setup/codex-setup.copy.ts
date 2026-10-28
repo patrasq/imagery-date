@@ -10,11 +10,12 @@ export const CODEX_SETUP_COPY = Object.freeze({
   instructions: (file: string): string => `the full text of ${file}`,
   skill: (name: string): string => `skill ${name}`,
   agent: (name: string): string => `custom agent ${name}`,
+  sandboxTestsFailed: (output: string): string => `sandbox: pnpm test fails in the imagery-date profile:\n${output}`,
+  hostNotBlocked: (profile: string): string => `sandbox: the ${profile} profile reached registry.npmjs.org`,
   unknownHookEvent: (event: string): string => `hooks: no sample input for event ${event}; add one to the check`,
   hookFailed: (event: string, output: string): string => `hooks: the ${event} hook failed:\n${output}`,
   hookOutputNotJson: (event: string, output: string): string => `hooks: the ${event} hook printed non-JSON:\n${output}`,
   line: (problem: string): string => `${problem}\n`,
   summary: (count: number): string => `\n${String(count)} problem(s) in the Codex setup.\n`,
-  ok: (version: string, checks: number): string =>
-    `Codex setup loads as intended in ${version.trim()} (${String(checks)} checks).\n`,
+  ok: (version: string): string => `Codex setup loads as intended in ${version.trim()}.\n`,
 });
