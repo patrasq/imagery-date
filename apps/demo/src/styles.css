@@ -72,7 +72,22 @@ body {
   letter-spacing: -0.01em;
 }
 
-.intro p,
+.badge {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge a {
+  color: inherit;
+}
+
+.intro p:not(.badge),
 .footnote p {
   margin: 0;
   color: var(--ink-soft);

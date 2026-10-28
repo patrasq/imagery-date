@@ -15,12 +15,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:one-export": "node scripts/check-one-export.ts",
-    "check:deps": "depcruise packages/imagery-date/src apps/web/src scripts --config .dependency-cruiser.cjs",
+    "check:deps": "depcruise packages/imagery-date/src apps/demo/src scripts --config .dependency-cruiser.cjs",
     "test": "vitest run --project unit --project recorded",
     "test:coverage": "vitest run --project unit --project recorded --coverage",
     "test:live": "vitest run --project live",
     "record": "pnpm --filter imagery-date run record",
-    "web": "pnpm --filter imagery-date-web run dev",
+    "demo": "pnpm --filter imagery-date-demo run dev",
     "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm check:one-export && pnpm check:deps && pnpm test:coverage && pnpm build"
   },
   "devDependencies": {

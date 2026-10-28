@@ -13,7 +13,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'unit',
-          include: [`${LIB}/src/**/*.spec.ts`, 'scripts/**/*.spec.ts', 'apps/web/src/**/*.spec.ts'],
+          include: [`${LIB}/src/**/*.spec.ts`, 'scripts/**/*.spec.ts', 'apps/demo/src/**/*.spec.ts'],
         },
       },
       {

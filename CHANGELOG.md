@@ -11,5 +11,5 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
 - HTTP stack: per-host limit, retries with full-jitter backoff and `Retry-After`, timeouts, shared in-flight
   requests and an LRU cache.
 - Command line: a point, a history, a CSV batch, the provider list; table or JSON.
-- Web page: click the map, see every provider's date; shareable links.
+- Demo page (not in the package): click the map, see every provider's date; shareable links.
 - Test doubles at `imagery-date/testing`.

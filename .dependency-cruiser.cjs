@@ -1,5 +1,5 @@
 // dependency-cruiser enforces CONTRIBUTING.md rules C6, C7 and C8: layers point inwards, providers never import each
-// other, the library core runs in any JavaScript runtime, and the web app uses only the published entry points.
+// other, the library core runs in any JavaScript runtime, and the demo uses only the published entry points.
 /** An npm package, unanchored so it matches both node_modules/<name>/ and pnpm's .pnpm/<name>@<v>/node_modules/<name>/. */
 const pkg = (name) => `node_modules/${name}/`;
 
@@ -87,10 +87,10 @@ module.exports = {
       to: { path: `${LIB}interface/` },
     },
     {
-      name: 'web-uses-the-public-api',
+      name: 'demo-uses-the-public-api',
       severity: 'error',
-      comment: 'C8: the web app imports the library only through its published entry points.',
-      from: { path: '^apps/web/src/' },
+      comment: 'C8: the demo imports the library only through its published entry points, like any user.',
+      from: { path: '^apps/demo/src/' },
       to: { path: LIB, pathNot: [`${LIB}index[.]ts$`] },
     },
     {

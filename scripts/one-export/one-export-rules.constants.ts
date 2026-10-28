@@ -4,7 +4,7 @@ export const ONE_EXPORT_RULES = {
     'packages/imagery-date/src',
     'packages/imagery-date/test',
     'packages/imagery-date/scripts',
-    'apps/web/src',
+    'apps/demo/src',
     'scripts',
   ],
   extension: '.ts',
@@ -13,7 +13,7 @@ export const ONE_EXPORT_RULES = {
   entryPaths: [
     /^packages\/imagery-date\/src\/interface\/cli\/cli\.ts$/,
     /^packages\/imagery-date\/scripts\/[^/]+\.ts$/,
-    /^apps\/web\/src\/main\.ts$/,
+    /^apps\/demo\/src\/main\.ts$/,
     /^scripts\/[^/]+\.ts$/,
   ],
   /** The only files allowed to re-export many symbols: the package's two public entry points. */

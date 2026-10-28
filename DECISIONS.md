@@ -4,14 +4,14 @@ Choices the code makes, newest last. Each entry: the question, the option chosen
 
 ## D-001 · TypeScript only
 
-One TypeScript codebase for the library, the CLI and the web page. The work is network-bound (each lookup waits on
+One TypeScript codebase for the library, the CLI and the demo page. The work is network-bound (each lookup waits on
 1–22 requests to rate-limited services), so a faster language would not make it faster, and the page must run in a
 browser. Other languages are decided later, from who actually uses it.
 
-## D-002 · A pnpm workspace: the package and the page apart
+## D-002 · A pnpm workspace: the package and its demo apart
 
-`packages/imagery-date` is what npm gets; `apps/web` is a private app that uses only the package's public entry point
-(rule C8). The page never ships inside the package, and it builds from the package's TypeScript through the `source`
+`packages/imagery-date` is what npm gets: the library and the CLI, the tool itself. `apps/demo` is a private demo that
+uses only the package's public entry point (rule C8). The demo never ships inside the package, and it builds from the package's TypeScript through the `source`
 export condition, so it never runs on a stale build.
 
 ## D-003 · TypeScript 6.0.3, not 7
@@ -28,7 +28,7 @@ the checker need no build step.
 ## D-005 · zod/mini for response schemas
 
 Every provider response is untrusted until it matches a schema (C5). `zod/mini` is the tree-shakable build, so the
-web page pays for the schemas it uses only; it is the package's one runtime dependency.
+demo page pays for the schemas it uses only; it is the package's one runtime dependency.
 
 ## D-006 · The public barrel may exceed 150 lines
 

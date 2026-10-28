@@ -20,7 +20,7 @@ A capture date is when the photo was taken, not proof the place still looks like
 
 Basemaps do not show when their photos were taken, and the "© 2026" on them is the copyright year, not the capture
 date. The dates exist, but scattered across providers' metadata services, tile headers and archives. `imagery-date`
-reads them all through one library, one command line and one web page.
+reads them all through one library and one command line, with a demo page to try them.
 
 ## Providers
 
@@ -91,11 +91,12 @@ are published at `imagery-date/testing`.
 - **Partial answers are kept**: when some archived Wayback releases do not answer, the photos found are reported as
   `partial` with what is missing, instead of being thrown away.
 
-## Web page
+## Demo
 
-`pnpm web` serves a map: click a point, see every provider's date. Requests go from the browser straight to each
-provider; a key never leaves it except to Google. The link holds the point (`#48.853,2.3499,19`) so a result can be
-shared.
+`apps/demo` is a demo of the library, not part of it: it is not in the npm package and needs no server. `pnpm demo`
+serves a map; click a point and see every provider's date. It uses only the library's public API, from the browser
+straight to each provider (a key never leaves it except to Google), and the link holds the point
+(`#48.853,2.3499,19`) so a result can be shared.
 
 ## Develop
 

@@ -1,8 +1,8 @@
 {
-  "name": "imagery-date-web",
+  "name": "imagery-date-demo",
   "version": "0.1.0",
   "private": true,
-  "description": "Click the map, see when each provider's photo there was taken.",
+  "description": "Demo of the imagery-date library: click the map, see when each provider's photo there was taken.",
   "type": "module",
   "scripts": {
     "dev": "vite",

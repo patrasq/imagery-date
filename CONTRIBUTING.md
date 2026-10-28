@@ -11,7 +11,7 @@ pnpm verify           # everything CI runs: types, lint, format, one-export, lay
 pnpm test             # unit and recorded tests: no network, seconds
 pnpm test:live        # the keyless providers against the real services
 pnpm record           # re-record provider responses (IMAGERY_DATE_GOOGLE_KEY=… for the Google ones)
-pnpm web              # the web page on http://localhost:5173
+pnpm demo             # the demo page on http://localhost:5173
 ```
 
 A change is finished only when `pnpm verify` passes.
@@ -30,7 +30,7 @@ correct code, stop and record the case in `DECISIONS.md`.
 | C5  | **Strict typing.** `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `erasableSyntaxOnly`. No `any`, no `as` (except `as const`), no `!`, no `@ts-ignore`. Untrusted data (every provider response) is parsed with Zod. | `tsconfig.json`, ESLint  |
 | C6  | **Ports at every boundary.** The network, the clock, randomness and each provider are abstract classes in `application/ports`; adapters live in `infrastructure`; every port has a deterministic fake in `src/testing`.                   | dependency-cruiser       |
 | C7  | **Layers point inwards.** `domain` imports only `domain`. `application` imports `domain` and itself. `infrastructure` imports both and Zod. A provider never imports another provider (shared ArcGIS code lives in `providers/arcgis`).   | dependency-cruiser       |
-| C8  | **The library runs anywhere.** Only the CLI may import Node built-ins; the web app imports the library only through its public entry point.                                                                                               | dependency-cruiser       |
+| C8  | **The library runs anywhere.** Only the CLI may import Node built-ins; the demo imports the library only through its public entry point, like any user.                                                                                   | dependency-cruiser       |
 | C9  | **Time and randomness come from their ports.** No `new Date()`, `Date.now()`, `setTimeout` or `Math.random()` outside `SystemClock` and `SystemRandom`; tests never sleep.                                                                | ESLint                   |
 | C10 | **I/O only through adapters.** `fetch` only in `FetchHttpClient`; `process.env` only in a `.config.ts`; no `console`.                                                                                                                     | ESLint                   |
 | C11 | **Every fact is the provider's, or unknown.** A capture date keeps the provider's precision (day, month, year, range); a field the provider does not state is `null`. Nothing is estimated.                                               | types, recorded tests    |
@@ -44,7 +44,7 @@ No names are abbreviated (`latitude`, not `lat`; `response`, not `res`), except 
 
 ```
 interface/cli ─┐                  composition (createImageryDateClient, the HTTP stack, the provider registry)
-apps/web ──────┤ public API ──►        │
+apps/demo ─────┤ public API ──►        │
                │                       ▼
                │       application: LookupImageryDates → selectProviders → settleProvider (fail-open)
                │                       │ uses ports only: HttpClient, Clock, RandomSource, ImageryDateProvider
@@ -71,7 +71,7 @@ packages/imagery-date/
   src/index.ts         the public API
   test/                recorded provider tests, CLI tests, live smoke tests, recordings/
   scripts/             the recorder
-apps/web/              the map page (Vite + MapLibre)
+apps/demo/             a demo page of the library (Vite + MapLibre); not published
 scripts/               the one-export checker
 ```
 

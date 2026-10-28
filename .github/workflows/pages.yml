@@ -1,6 +1,6 @@
 name: pages
 
-# Publishes the web page to GitHub Pages from main, once the repository is public.
+# Publishes the demo to GitHub Pages from main, once the repository is public.
 on:
   push:
     branches: [main]
@@ -28,10 +28,10 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter imagery-date-web run build
+      - run: pnpm --filter imagery-date-demo run build
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: apps/web/dist
+          path: apps/demo/dist
 
   deploy:
     needs: build
