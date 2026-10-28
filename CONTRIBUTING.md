@@ -101,6 +101,16 @@ exports `IgnFranceProvider`; `bing.constants.ts` exports `BING`.
 3. Test it on the recording and on hand-written error answers; document it in [PROVIDERS.md](PROVIDERS.md) with its
    terms class and how it was checked.
 
+## Releasing
+
+1. Set the version in `packages/imagery-date/package.json` and add it to `CHANGELOG.md`; commit.
+2. `git tag v<version> && git push origin v<version>`.
+3. `.github/workflows/release.yml` runs `pnpm verify` and publishes to npm with provenance. It refuses a tag that does
+   not match the package version.
+
+npm authentication: trusted publishing (OIDC) for `patrasq/imagery-date`, workflow `release.yml`. Until that is
+configured on npmjs.com, the workflow uses the `NPM_TOKEN` repository secret (DECISIONS.md D-018).
+
 ## Working protocol
 
 - Small commits that each pass `pnpm verify`.

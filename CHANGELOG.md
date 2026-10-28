@@ -2,7 +2,7 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org/).
 
-## 0.1.0 · unreleased
+## 0.1.0 · 2026-10-28
 
 - Seven providers: IGN France BD ORTHO, swisstopo SWISSIMAGE, Esri World Imagery, Bing Maps Aerial, Esri World
   Imagery Wayback, Google Street View and Google Solar API.

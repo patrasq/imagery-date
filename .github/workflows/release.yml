@@ -1,7 +1,8 @@
 name: release
 
-# Publishes imagery-date to npm with provenance when a version tag (v0.1.1, …) is pushed. The first version is published
-# by hand; after it, npm's trusted publishing for this repository and workflow replaces any token.
+# Publishes imagery-date to npm when a version tag (v0.1.0, …) is pushed. It authenticates with npm trusted publishing
+# (OIDC) once that is configured for this workflow on npmjs.com, and with the NPM_TOKEN secret until then
+# (CONTRIBUTING.md, Releasing; DECISIONS.md D-018).
 on:
   push:
     tags: ['v*']
@@ -24,4 +25,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
-      - run: pnpm --filter imagery-date publish --access public --provenance --no-git-checks
+      - name: Check that the tag matches the package version
+        run: test "v$(node -p "require('./packages/imagery-date/package.json').version")" = "$GITHUB_REF_NAME"
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
+      - run: npm install --global npm@11.21.0
+      - run: npm publish --access public --provenance
+        working-directory: packages/imagery-date
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

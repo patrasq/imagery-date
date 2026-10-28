@@ -102,3 +102,12 @@ answers. Misuse (arguments, refused coordinates, a CSV without coordinate column
 ## D-017 · Published under the author's own account
 
 The repository, the npm package and the page are Andrei-Dragoș Pătrașcu's. Nothing names any company's data sources.
+
+## D-018 · npm releases from GitHub Actions, without 2FA on the account
+
+npm refuses to publish from an account without two-factor authentication unless the token is a granular access token
+with "bypass 2FA" (checked 2026-10-28). Such tokens keep direct publish access until January 2027 (GitHub changelog,
+2026-07-31). The account stays without 2FA: 0.1.0 is published by `release.yml` with a short-lived bypass token in the
+`NPM_TOKEN` secret, so the token never leaves npmjs.com and GitHub; trusted publishing (OIDC) is then configured for
+`release.yml` on the package's npm settings, and the secret and token are deleted. Trusted publishing needs npm 11.5.1
+or later, so the workflow installs npm 11.21.0. Provenance is attached to every release.
