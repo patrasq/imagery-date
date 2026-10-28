@@ -18,5 +18,5 @@ export function renderHistory(report: ImageryDateReport): string {
   const failure =
     outcome?.failure === null || outcome?.failure === undefined ? [] : [outcome.failure.detail, CLI.empty];
   const table = rows.length === 0 ? [] : [formatTable(HISTORY_COPY.columns, rows)];
-  return [heading, summary, CLI.empty, ...table, ...failure, CLI_COPY.caveat, CLI.empty].join(CLI.newline);
+  return [heading, summary, CLI.empty, ...table, ...failure].join(CLI.newline);
 }

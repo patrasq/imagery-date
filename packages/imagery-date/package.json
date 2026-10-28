@@ -1,7 +1,7 @@
 {
   "name": "imagery-date",
   "version": "0.1.0",
-  "description": "When was the map photo at this point taken? Capture dates from Esri, Bing, IGN France, swisstopo and Google, side by side, with their precision.",
+  "description": "Look up the capture date of map imagery at a location: Esri World Imagery and Wayback, Bing, IGN France, swisstopo, Google Street View and Solar. Library and CLI.",
   "keywords": [
     "imagery",
     "satellite",

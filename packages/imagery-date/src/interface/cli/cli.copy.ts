@@ -1,6 +1,6 @@
 /** Everything the command line prints. */
 export const CLI_COPY = Object.freeze({
-  help: `imagery-date — when was the map photo at this point taken?
+  help: `imagery-date: capture dates of map imagery at a point (Esri, Bing, IGN France, swisstopo, Google).
 
 Usage
   imagery-date <latitude> <longitude> [--zoom 19] [--providers ign-france,bing] [--json]
@@ -21,14 +21,11 @@ id and zoom columns, and writes one CSV row per photo found, in input order.
 
 Set IMAGERY_DATE_GOOGLE_KEY to a Google Maps Platform key to add Google Street View (free); google-solar is billed
 by Google and runs only when named in --providers.
-
-A capture date is when the photo was taken, not proof the place still looks like that.
 `,
   reportHeading: (latitude: number, longitude: number, zoom: number, observedAt: string) =>
-    `${String(latitude)}, ${String(longitude)} · zoom ${String(zoom)} · asked ${observedAt}`,
+    `${String(latitude)}, ${String(longitude)} · zoom ${String(zoom)} · queried ${observedAt}`,
   newest: (date: string, provider: string) => `Newest photo shown at this zoom: ${date} (${provider})`,
   noNewest: 'No provider dates a photo shown at this zoom.',
-  caveat: 'A capture date is when the photo was taken, not proof the place still looks like that.',
   columns: Object.freeze(['Provider', 'Status', 'Taken', 'Product', 'Pixel', 'Zoom', 'Distance', 'Published', 'Note']),
   providerColumns: Object.freeze(['ID', 'Name', 'Terms', 'Key', 'Default', 'Billable']),
   yes: 'yes',

@@ -49,7 +49,7 @@ refuses a request without its `g` (generation) parameter and accepts any current
 2026-10-28 (a value far above the current generation is refused). Bing's aerial layer is complete to zoom 19, so a
 deeper zoom is asked at 19 and the capture says so.
 
-## D-009 · Wayback: walk the changes, wait long, keep partial answers
+## D-009 · Wayback: tilemap walk, 90 s timeout, partial outcomes
 
 Asking every release (197) per point would be 400 requests. Each release's tilemap names the release that drew the
 tile, so the walk asks only releases where the tile changed: 11 tilemaps and 11 metadata queries at Copenhagen City
@@ -76,7 +76,7 @@ panorama. A panorama not credited exactly `© Google` or `© <year> Google` is n
 contributor", with its owner's credit. Recordings use a Google panorama and a company's, so no private person's name
 is committed.
 
-## D-013 · Ask only for the fields read
+## D-013 · Field masks for IGN and Google Solar
 
 IGN gets `PROPERTYNAME=date_vol,res,pva` (2.2 MB of polygons → 1.7 KB per point) and Google Solar gets
 `fields=imageryDate,imageryQuality,center` (7.8 MB → 831 bytes at the Palace of the Parliament).
@@ -90,8 +90,8 @@ keyless providers still answer.
 
 ## D-015 · Defaults: zoom 19, 4 requests per host, 8 points at once
 
-Zoom 19 is building level, where every basemap shows its finest photo almost everywhere. Four requests per host stays
-polite to public services and under the browser's six; eight points at once keeps a batch moving while each host
+Zoom 19 is building level, where every basemap shows its finest photo almost everywhere. Four requests per host keeps
+load on public services low and stays under the browser's per-host limit of six; eight points at once keeps a batch moving while each host
 still sees at most four requests.
 
 ## D-016 · The CLI exits 2 for misuse, 0 otherwise

@@ -99,7 +99,7 @@ describe(`${LookupImageryDates.name}: which providers are asked`, () => {
     ]);
     expect(report.outcomes[1]?.failure).toEqual({
       code: FailureCode.MissingCredential,
-      detail: 'google-street-view needs a Google Maps Platform API key; none was given, so it was not called.',
+      detail: 'No Google Maps Platform API key given.',
     });
     expect(billable.queries).toHaveLength(0);
   });

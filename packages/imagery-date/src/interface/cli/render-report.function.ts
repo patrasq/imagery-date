@@ -27,7 +27,7 @@ const rows = (outcome: ProviderOutcome, name: string): string[][] => {
   return outcome.failure === null ? rows : [...rows, [name, outcome.status, ...NO_CAPTURE, outcome.failure.detail]];
 };
 
-/** A report as text: where and when, the newest photo, one table row per photo, and the caveat. */
+/** A report as text: point and time, the newest photo, one table row per photo. */
 export function renderReport(report: ImageryDateReport, providers: readonly ProviderDescriptor[]): string {
   const names = new Map(providers.map((provider) => [provider.id, provider.name]));
   const name = (id: ProviderIdValue): string => names.get(id) ?? id;
@@ -38,5 +38,5 @@ export function renderReport(report: ImageryDateReport, providers: readonly Prov
     CLI_COPY.columns,
     report.outcomes.flatMap((outcome) => rows(outcome, name(outcome.provider))),
   );
-  return [heading, summary, CLI.empty, table, CLI_COPY.caveat, CLI.empty].join(CLI.newline);
+  return [heading, summary, CLI.empty, table].join(CLI.newline);
 }

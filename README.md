@@ -1,11 +1,23 @@
 # imagery-date
 
-**When was the map photo at this point taken?** Every imagery provider answers, side by side, exactly as precisely
-as it publishes the date: a day, a month, a year, or a range of days. Nothing is guessed.
+Look up the capture date of the map imagery at a location. `imagery-date` queries Esri World Imagery, Esri Wayback,
+Bing Maps, IGN France (BD ORTHO), swisstopo (SWISSIMAGE) and Google (Street View, Solar API) and returns each
+provider's date with its precision: day, month, year or date range.
+
+TypeScript library and CLI. Node 20 or later; the library also runs in browsers, Deno and Bun.
+
+## Install
+
+```sh
+npm install imagery-date      # library
+npx imagery-date --help       # CLI
+```
+
+## CLI
 
 ```
-$ npx imagery-date 48.853 2.3499
-48.853, 2.3499 · zoom 19 · asked 2026-10-28T14:06:49.747Z
+$ imagery-date 48.853 2.3499
+48.853, 2.3499 · zoom 19 · queried 2026-10-28T14:38:43.801Z
 Newest photo shown at this zoom: 2025-03-25 (Esri World Imagery)
 
 Provider              Status            Taken                  Product         Pixel  Zoom   Distance  Published  Note
@@ -13,103 +25,120 @@ IGN France BD ORTHO   found             2024-08-27             BD ORTHO 2024   0
 swisstopo SWISSIMAGE  outside-coverage                                                                            outside its coverage
 Esri World Imagery    found             2025-03-25             Vivid Advanced  0.5 m  12–19
 Bing Maps Aerial      found             2021-06-16/2021-10-08                         19
-Google Street View    skipped                                                                                     Google Street View needs a Google Maps Platform API key; none was given, so it was not called.
-
-A capture date is when the photo was taken, not proof the place still looks like that.
+Google Street View    skipped                                                                                     No Google Maps Platform API key given.
 ```
 
-Basemaps do not show when their photos were taken, and the "© 2026" on them is the copyright year, not the capture
-date. The dates exist, but scattered across providers' metadata services, tile headers and archives. `imagery-date`
-reads them all through one library and one command line, with a demo page to try them.
+| Command                              | Output                                              |
+| ------------------------------------ | --------------------------------------------------- |
+| `imagery-date <lat> <lon>`           | dates from the default providers                    |
+| `imagery-date history <lat> <lon>`   | every photo Esri World Imagery has shown since 2014 |
+| `imagery-date batch <file.csv \| ->` | CSV, one row per photo, in input order              |
+| `imagery-date providers`             | provider IDs, terms class, key, default             |
 
-## Providers
+| Option              | Default                |                                    |
+| ------------------- | ---------------------- | ---------------------------------- |
+| `-z, --zoom`        | 19                     | Web Mercator zoom, 0–23            |
+| `-p, --providers`   | all enabled by default | comma-separated provider IDs       |
+| `-c, --concurrency` | 8                      | points looked up at once (`batch`) |
+| `--json`            |                        | JSON instead of a table            |
 
-| Provider                     | States the date as     | Where                       | Key                   |
-| ---------------------------- | ---------------------- | --------------------------- | --------------------- |
-| `ign-france` BD ORTHO        | flight day             | France and overseas regions | none                  |
-| `swisstopo` SWISSIMAGE 10 cm | flight year            | Switzerland, Liechtenstein  | none                  |
-| `esri-world-imagery`         | capture day, per zoom  | world                       | none                  |
-| `bing` Aerial                | range of capture days  | world                       | none                  |
-| `esri-wayback`               | every photo since 2014 | world                       | none (asked by name)  |
-| `google-street-view`         | month of the panorama  | world                       | Google, free          |
-| `google-solar`               | capture day            | where Solar has data        | Google, billed (name) |
+`IMAGERY_DATE_GOOGLE_KEY` sets a Google Maps Platform key, which enables `google-street-view`. `google-solar` is
+billed by Google and runs only when listed in `--providers`.
 
-Each provider's source, terms, precision and how it was checked are in [PROVIDERS.md](PROVIDERS.md). Google Earth
-history, Google Maps satellite tiles and Apple are left out on purpose; the reasons are there too.
+`batch` input needs a header row with latitude and longitude columns (`latitude`/`lat`/`y`, `longitude`/`lon`/`lng`/`x`)
+and may have `id` and `zoom` columns. Output columns: `key, latitude, longitude, zoom, provider, status, date,
+precision, start, end, product, resolution_m, zoom_min, zoom_max, distance_m, published_on, newest, failure_code,
+failure_detail`. Rows with invalid coordinates are written with status `refused`.
 
-## Command line
-
-```sh
-npx imagery-date 48.853 2.3499                       # every default provider, zoom 19
-npx imagery-date 55.6761 12.5683 --zoom 20 --json    # JSON report
-npx imagery-date history 55.6761 12.5683 --zoom 18   # every Esri photo here since 2014
-npx imagery-date batch points.csv > dates.csv        # a CSV of points, one row per photo out
-npx imagery-date providers                           # every provider, its terms and key
-```
-
-Set `IMAGERY_DATE_GOOGLE_KEY` to a Google Maps Platform key to add Street View. `batch` reads a header row with
-latitude and longitude columns (`lat`, `lon`, `lng` work) and optional `id` and `zoom`, streams the file, and writes
-results in input order; a row it cannot read becomes a `refused` row in its place.
+Exit codes: `0` success (individual provider failures are reported in the output), `2` invalid arguments or input.
 
 ## Library
 
 ```ts
-import { createImageryDateClient, ProviderId } from 'imagery-date';
+import { createImageryDateClient } from 'imagery-date';
 
 const client = createImageryDateClient({ credentials: { google: process.env.GOOGLE_KEY } });
 
 const report = await client.lookup(48.853, 2.3499, { zoom: 19 });
 report.newest?.date.value; // '2025-03-25'
-for (const outcome of report.outcomes)
-  console.log(
-    outcome.provider,
-    outcome.status,
-    outcome.captures.map((c) => c.date.value),
-  );
 
-const history = await client.history(55.6761, 12.5683, { zoom: 18 }); // Wayback, newest first
+const history = await client.history(55.6761, 12.5683, { zoom: 18 });
 
-for await (const { key, report, error } of client.lookupMany(points, { concurrency: 8 })) {
-  // input order; `error` is set instead of `report` for a point that was refused
+for await (const result of client.lookupMany(points, { concurrency: 8 })) {
+  // results arrive in input order; result.error is set instead of result.report for invalid points
 }
 ```
 
-Every capture date carries its precision and its first and last possible day (`start`, `end`), so dates of any
-precision compare. A provider that fails becomes a `failed` outcome with a typed `FailureCode`; it never fails the
-lookup. Runs in Node 20+, Deno, Bun, browsers and workers: the core uses only `fetch`. Test doubles for your own code
-are published at `imagery-date/testing`.
+`lookup` returns an `ImageryDateReport`:
 
-### Built to run at scale
+| Field        | Type                |                                                           |
+| ------------ | ------------------- | --------------------------------------------------------- |
+| `point`      | `GeoPoint`          |                                                           |
+| `zoom`       | `ZoomLevel`         |                                                           |
+| `observedAt` | `string`            | ISO time of the query                                     |
+| `outcomes`   | `ProviderOutcome[]` | one per provider queried                                  |
+| `newest`     | `Capture \| null`   | latest capture shown at `zoom`, excluding Wayback history |
 
-- **Polite by default**: at most 4 requests in flight per host, retries with full-jitter backoff that honour
-  `Retry-After`, a timeout on every attempt.
-- **Each distinct request is sent once**: identical requests in flight share one answer, and final answers are cached,
-  so a batch of points in one tile asks once.
-- **Constant memory**: `lookupMany` and `batch` stream; memory is bounded by the concurrency, not the input size.
-- **Small requests**: Bing is read with `HEAD` (no photo downloaded); IGN and Google Solar ask only for the fields
-  read (IGN 2.2 MB → 1.7 KB per point).
-- **Partial answers are kept**: when some archived Wayback releases do not answer, the photos found are reported as
-  `partial` with what is missing, instead of being thrown away.
+`ProviderOutcome.status` is `found`, `partial`, `no-date`, `outside-coverage`, `skipped` or `failed`; `failure` holds
+a `FailureCode` (`timeout`, `network`, `aborted`, `http-status`, `invalid-response`, `refused`, `missing-credential`,
+`unexpected`) and a detail. A `Capture` has `date` (`CaptureDate`: `value`, `precision`, `start`, `end`), `product`,
+`resolutionMetres`, `zoomRange`, `distanceMetres`, `publishedOn` and `attribution`; fields a provider does not supply
+are `null`.
+
+Methods reject only with an `ImageryDateError` subclass for invalid input (coordinates, zoom, unknown provider ID).
+
+Client options: `credentials`, `userAgent`, `timeoutMilliseconds` (15 000), `requestsPerHost` (4), `cacheEntries`
+(5 000), and `httpClient`, `clock`, `random` to replace the defaults. Test doubles (`RecordedHttpClient`,
+`FixedClock`, `SequenceRandom`) are exported from `imagery-date/testing`.
+
+## Providers
+
+| ID                   | Date                        | Coverage                    | Key                  | Default |
+| -------------------- | --------------------------- | --------------------------- | -------------------- | ------- |
+| `ign-france`         | day (flight)                | France and overseas regions | none                 | yes     |
+| `swisstopo`          | year (flight)               | Switzerland, Liechtenstein  | none                 | yes     |
+| `esri-world-imagery` | day, per zoom range         | world                       | none                 | yes     |
+| `bing`               | date range of the tile      | world                       | none                 | yes     |
+| `esri-wayback`       | day, every photo since 2014 | world                       | none                 | no      |
+| `google-street-view` | month or year (panorama)    | world                       | Google Maps Platform | yes     |
+| `google-solar`       | day                         | Solar API coverage          | Google Maps Platform | no      |
+
+Sources, terms and test locations per provider: [PROVIDERS.md](PROVIDERS.md). Google Earth history, Google Maps
+satellite tiles and Apple Maps are not supported (see there).
+
+## HTTP behaviour
+
+- At most 4 concurrent requests per host.
+- 15 s timeout per attempt (90 s for Wayback metadata services); 3 attempts with full-jitter exponential backoff;
+  `Retry-After` is honoured.
+- Identical in-flight requests are merged; successful responses are cached (LRU, 5 000 entries).
+- Bing is read with `HEAD`; IGN and Google Solar requests ask only for the fields used.
+- `lookupMany` and `batch` stream; memory is bounded by the concurrency.
+
+## Notes
+
+- A capture date is when the photo was taken; the place may have changed since.
+- The year in a basemap's copyright line is not its capture date.
+- Esri and Bing metadata is read from public endpoints whose terms do not explicitly cover this use; see
+  [PROVIDERS.md](PROVIDERS.md).
 
 ## Demo
 
-`apps/demo` is a demo of the library, not part of it: it is not in the npm package and needs no server. `pnpm demo`
-serves a map; click a point and see every provider's date. It uses only the library's public API, from the browser
-straight to each provider (a key never leaves it except to Google), and the link holds the point
-(`#48.853,2.3499,19`) so a result can be shared.
+[patrasq.github.io/imagery-date](https://patrasq.github.io/imagery-date/) (`apps/demo`, not part of the npm package):
+a map that runs the library in the browser.
 
-## Develop
+## Development
 
 ```sh
 pnpm install      # Node 22, pnpm 12
-pnpm verify       # types, lint, format, one export per file, layer rules, tests with coverage, build
-pnpm test:live    # the keyless providers, against the real services
-pnpm record       # re-record provider responses (IMAGERY_DATE_GOOGLE_KEY for the Google ones)
+pnpm verify       # typecheck, lint, format, one-export check, dependency rules, tests with coverage, build
+pnpm test:live    # keyless providers against the live services
+pnpm record       # re-record provider responses (IMAGERY_DATE_GOOGLE_KEY for the Google providers)
+pnpm demo         # demo on http://localhost:5173
 ```
 
-The engineering rules, each enforced by the toolchain, are in [CONTRIBUTING.md](CONTRIBUTING.md); every choice the
-code makes and why is in [DECISIONS.md](DECISIONS.md).
+Rules: [CONTRIBUTING.md](CONTRIBUTING.md). Design decisions: [DECISIONS.md](DECISIONS.md).
 
-## Licence
+## License
 
-MIT © Andrei-Dragoș Pătrașcu. The dates belong to their providers; credit them as [PROVIDERS.md](PROVIDERS.md) says.
+MIT

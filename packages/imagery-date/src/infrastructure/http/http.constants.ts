@@ -15,7 +15,7 @@ export const HTTP = Object.freeze({
   millisecondsPerSecond: 1000,
   retryableStatuses: new Set([408, 425, 429, 500, 502, 503, 504]),
   retryableFailures: new Set<string>([FailureCode.Timeout, FailureCode.Network]),
-  /** Simultaneous requests to one host: polite to public services, and the browser's own limit is six. */
+  /** Simultaneous requests to one host; below the browser's per-host limit of six. */
   concurrentRequestsPerHost: 4,
   /** Responses kept, least recently used dropped first; a batch then asks a provider once per distinct request. */
   cacheEntries: 5000,

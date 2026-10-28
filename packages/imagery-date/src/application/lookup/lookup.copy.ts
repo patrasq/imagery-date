@@ -7,7 +7,6 @@ const CREDENTIAL_NAMES: Readonly<Record<CredentialKindValue, string>> = Object.f
 
 /** Details of the outcomes the lookup service writes itself. */
 export const LOOKUP_COPY = Object.freeze({
-  missingCredential: (providerName: string, credential: CredentialKindValue) =>
-    `${providerName} needs a ${CREDENTIAL_NAMES[credential]} API key; none was given, so it was not called.`,
+  missingCredential: (credential: CredentialKindValue) => `No ${CREDENTIAL_NAMES[credential]} API key given.`,
   unexpected: (message: string) => `Unexpected error: ${message}`,
 } as const);

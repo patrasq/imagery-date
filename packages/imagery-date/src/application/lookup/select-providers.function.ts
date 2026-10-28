@@ -11,9 +11,9 @@ const byDefault = (provider: ImageryDateProvider): boolean =>
   provider.descriptor.enabledByDefault && !provider.descriptor.billable;
 
 function skipReason(provider: ImageryDateProvider, credentials: Credentials): ProviderFailure | null {
-  const { credential, name } = provider.descriptor;
+  const { credential } = provider.descriptor;
   if (credential === null || credentials[credential] !== undefined) return null;
-  return { code: FailureCode.MissingCredential, detail: LOOKUP_COPY.missingCredential(name, credential) };
+  return { code: FailureCode.MissingCredential, detail: LOOKUP_COPY.missingCredential(credential) };
 }
 
 /**

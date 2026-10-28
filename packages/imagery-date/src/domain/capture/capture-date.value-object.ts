@@ -6,7 +6,7 @@ import { DatePrecision } from './date-precision.enum.ts';
 import type { DatePrecisionValue } from './date-precision.type.ts';
 
 /**
- * When a photo was taken, exactly as precisely as its provider states it. `start` and `end` are the first and last
+ * When a photo was taken, at the precision its provider states. `start` and `end` are the first and last
  * day it can have been, so dates of any precision sort and compare.
  */
 export class CaptureDate {

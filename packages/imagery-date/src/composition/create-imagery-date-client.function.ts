@@ -7,7 +7,7 @@ import type { ImageryDateClient } from './imagery-date-client.interface.ts';
 import type { ImageryDateClientOptions } from './imagery-date-client-options.interface.ts';
 
 /**
- * A client for every provider, over a polite HTTP stack: responses cached, identical requests shared, at most four
+ * A client for every provider over the default HTTP stack: responses cached, identical requests shared, at most four
  * requests per host, timeouts, and retries with backoff. Share one client across lookups to share its cache.
  */
 export function createImageryDateClient(options: ImageryDateClientOptions = {}): ImageryDateClient {

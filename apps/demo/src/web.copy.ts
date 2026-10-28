@@ -1,8 +1,8 @@
 /** Text the page writes. */
 export const WEB_COPY = Object.freeze({
   idle: 'Click a point on the map.',
-  loading: (latitude: string, longitude: string) => `Asking every provider about ${latitude}, ${longitude}…`,
-  loadingHistory: 'Asking every archived Esri release; old releases can take a minute…',
+  loading: (latitude: string, longitude: string) => `Querying providers for ${latitude}, ${longitude}…`,
+  loadingHistory: 'Querying Esri Wayback releases; old releases can take up to a minute…',
   newest: 'Newest photo shown at this zoom',
   noNewest: 'No provider dates a photo shown at this zoom.',
   where: (latitude: string, longitude: string, zoom: number) => `${latitude}, ${longitude} · zoom ${String(zoom)}`,

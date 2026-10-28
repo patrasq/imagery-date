@@ -1,4 +1,4 @@
-// imagery-date: when was the map photo at this point taken? The public API; nothing else is supported.
+// imagery-date: capture dates of map imagery at a point. The public API; nothing else is supported.
 
 // The client
 export { createImageryDateClient } from './composition/create-imagery-date-client.function.ts';

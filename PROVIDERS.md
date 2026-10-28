@@ -1,92 +1,87 @@
 # Providers
 
-What each provider states, where `imagery-date` reads it, how exactly, and under what terms. Every provider was
-checked against its live service on 2026-10-28 at the landmarks in `packages/imagery-date/scripts/recording.constants.ts`;
-the responses are recorded under `packages/imagery-date/test/recordings` and replayed by the tests.
+Source, precision, coverage and terms of each provider. All were tested against the live services on 2026-10-28 at the
+locations in `packages/imagery-date/scripts/recording.constants.ts`; the responses are stored in
+`packages/imagery-date/test/recordings` and replayed by the tests.
 
-The terms classes are this project's reading, not legal advice:
+Terms classes (this project's classification, not legal advice):
 
-- **open-licence**: published under an open licence; reuse allowed with the credit given.
-- **official-api-own-key**: a documented API, called with your own key, under your agreement with the provider.
-- **public-terms-unclear**: a public endpoint the provider serves to everyone (and that OpenStreetMap's editors read),
-  whose terms do not explicitly cover this use. Check them before building a product on it.
+- `open-licence`: published under an open licence; reuse allowed with attribution.
+- `official-api-own-key`: documented API, called with the user's own key under the user's agreement with the provider.
+- `public-terms-unclear`: public endpoint whose terms do not explicitly cover this use.
 
-## ign-france · IGN France BD ORTHO
+## ign-france (IGN France BD ORTHO)
 
-- **States**: the flight day (`date_vol`) of the orthophoto at the point, its campaign year and its pixel (20 cm).
-- **Source**: the BD ORTHO mosaic graph on the Géoplateforme WFS
-  (`ORTHOIMAGERY.ORTHOPHOTOS.GRAPHE-MOSAIQUAGE:graphe_bdortho`), queried with a box of about one metre around the point
-  and only the three fields read (`PROPERTYNAME`), which cuts each answer from about 2.2 MB of polygons to 1.7 KB.
-- **Coverage**: metropolitan France with Corsica, Guadeloupe, Martinique, Guyane, La Réunion and Mayotte. Coarse boxes
-  decide whether it is asked; a point in a box but outside France answers `no-date`.
-- **Terms**: open-licence (Licence Ouverte 2.0). Credit: "IGN – BD ORTHO®".
-- **Checked**: Notre-Dame de Paris → 2024-08-27, BD ORTHO 2024, 0.2 m.
+- **Date**: flight day (`date_vol`), campaign year (`pva`), pixel size (`res`, 20 cm).
+- **Source**: Géoplateforme WFS, layer `ORTHOIMAGERY.ORTHOPHOTOS.GRAPHE-MOSAIQUAGE:graphe_bdortho`, box of about 1 m
+  around the point, `PROPERTYNAME=date_vol,res,pva` (response size 1.7 KB instead of 2.2 MB with geometry).
+- **Coverage**: metropolitan France and Corsica, Guadeloupe, Martinique, Guyane, La Réunion, Mayotte. Points inside the
+  bounding boxes but outside France return `no-date`.
+- **Terms**: `open-licence` (Licence Ouverte 2.0). Attribution: "IGN – BD ORTHO®".
+- **Tested**: Notre-Dame de Paris → 2024-08-27, BD ORTHO 2024, 0.2 m.
 
-## swisstopo · SWISSIMAGE 10 cm
+## swisstopo (SWISSIMAGE 10 cm)
 
-- **States**: the year of the flight (`datenstand`) per map sheet, and the pixel. swisstopo publishes the year only,
-  so the date is a year.
-- **Source**: geo.admin.ch `identify` on `ch.swisstopo.images-swissimage-dop10.metadata`.
+- **Date**: flight year (`datenstand`) per map sheet; swisstopo does not publish the day. Pixel size.
+- **Source**: geo.admin.ch `identify`, layer `ch.swisstopo.images-swissimage-dop10.metadata`.
 - **Coverage**: Switzerland and Liechtenstein.
-- **Terms**: open-licence (swisstopo open government data). Credit: "© swisstopo".
-- **Checked**: Zürich main station → 2025, 0.1 m.
+- **Terms**: `open-licence` (swisstopo open government data). Attribution: "© swisstopo".
+- **Tested**: Zürich main station → 2025, 0.1 m.
 
-## esri-world-imagery · Esri World Imagery
+## esri-world-imagery (Esri World Imagery)
 
-- **States**: the capture day (`SRC_DATE`) of every photo in the basemap at the point, with the zoom levels that show
-  it, its pixel and its source name. The date depends on the zoom: at Copenhagen City Hall the basemap shows a
-  2025-03-21 satellite photo at zoom 12–19 and a 2012-01-15 aerial at zoom 20.
-- **Source**: the basemap's own Citations layer (`World_Imagery/MapServer/4/query`), one request per point. The
-  undated 15 m world mosaic is left out.
-- **Terms**: public-terms-unclear. Esri explicitly allows this metadata for OpenStreetMap editing; other uses fall
-  under Esri's terms of use. Credit: "Esri, Vantor, Earthstar Geographics, and the GIS User Community".
-- **Checked**: Copenhagen City Hall → 2025-03-21 (zoom 12–19, 0.5 m) and 2012-01-15 (zoom 20, 0.1 m); the open
-  Atlantic → no date.
+- **Date**: capture day (`SRC_DATE`) of each image in the basemap at the point, with its zoom range, pixel size and
+  source name. Different zoom ranges can show different images.
+- **Source**: `World_Imagery/MapServer/4/query` (Citations layer), one request per point. The undated 15 m global
+  mosaic is skipped.
+- **Terms**: `public-terms-unclear`. Esri grants use of this metadata for OpenStreetMap editing; other uses fall under
+  Esri's terms of use. Attribution: "Esri, Vantor, Earthstar Geographics, and the GIS User Community".
+- **Tested**: Copenhagen City Hall → 2025-03-21 (zoom 12–19, 0.5 m) and 2012-01-15 (zoom 20, 0.1 m); open Atlantic →
+  `no-date`.
 
-## bing · Bing Maps Aerial
+## bing (Bing Maps Aerial)
 
-- **States**: the first and last capture day of the photos in the aerial tile at the point, as a range: a tile can mix
-  photos, so no single day is claimed.
-- **Source**: the `X-VE-TILEMETA-CaptureDatesRange` header of the zoom-19 tile, read with `HEAD`, so no photo is
-  downloaded. Bing exposes the header to browsers on purpose (`Access-Control-Expose-Headers`).
-- **Terms**: public-terms-unclear. Bing Maps for Enterprise is being retired (free keys ended 2025-06-30, enterprise
-  ends 2028-06-30), so this source may disappear. Credit: "© Microsoft".
-- **Checked**: Notre-Dame de Paris → 2021-06-16/2021-10-08.
+- **Date**: first and last capture day of the images in the zoom-19 tile, returned as a date range.
+- **Source**: `X-VE-TILEMETA-CaptureDatesRange` response header of the tile, requested with `HEAD`. The header is listed
+  in `Access-Control-Expose-Headers`, so it is readable from browsers.
+- **Terms**: `public-terms-unclear`. Bing Maps for Enterprise is being retired (free keys ended 2025-06-30, enterprise
+  accounts end 2028-06-30). Attribution: "© Microsoft".
+- **Tested**: Notre-Dame de Paris → 2021-06-16/2021-10-08.
 
-## esri-wayback · Esri World Imagery Wayback
+## esri-wayback (Esri World Imagery Wayback)
 
-- **States**: every photo World Imagery has shown at the point since February 2014, newest first, each with its
-  capture day and the first archived release that published it. Not asked by default (about two requests per photo).
-- **Source**: the Wayback release list, then each release's tilemap says which earlier release drew the tile, so only
-  releases where the tile changed are asked; each of those is dated from its own metadata service.
-- **Slow by nature**: archived metadata services answered in 25–61 s, once with a 502 (2026-10-28), so they get a
-  90 s timeout and retries. A release that still does not answer leaves a `partial` outcome with the photos found.
-- **Terms**: as Esri World Imagery.
-- **Checked**: Copenhagen City Hall, zoom 18 → 9 photos from 2012-01-15 to 2025-03-21 in 23 requests.
+- **Date**: every image World Imagery has shown at the point since February 2014, newest first, with capture day and
+  the date of the first release that included it. Not queried by default.
+- **Source**: the Wayback release list; each release's tilemap gives the release that last changed the tile, so only
+  releases with changes are queried; each is dated from its metadata service.
+- **Latency**: archived metadata services took 25–61 s and returned one 502 (2026-10-28). Timeout is 90 s with retries;
+  if some releases still fail, the outcome is `partial` and lists what is missing.
+- **Terms**: as `esri-world-imagery`.
+- **Tested**: Copenhagen City Hall, zoom 18 → 9 images from 2012-01-15 to 2025-03-21, 23 requests.
 
-## google-street-view · Google Street View
+## google-street-view (Google Street View)
 
-- **States**: the month (or only the year) of the nearest outdoor panorama within 50 m, its distance and its credit.
-  A street-level photo, not an aerial one.
-- **Source**: the Street View Static API image metadata, which Google documents as free and quota-free.
-- **Mind the owner**: the nearest panorama is often a photo sphere someone uploaded. All four Paris landmarks tried
-  returned one. A panorama not credited to Google (`© Google` or `© <year> Google`, the year being the copyright year,
-  not the capture) is named "Street View photo by a contributor", with its owner's credit.
-- **Terms**: official-api-own-key (your Google Maps Platform key).
-- **Checked**: a street in Paris 14e → 2025-07, Google's own panorama; Paris 15e → 2024-12, a contributor's.
+- **Date**: month or year of the nearest outdoor panorama within 50 m; distance and attribution. Street-level, not
+  aerial.
+- **Source**: Street View Static API image metadata (no charge and no quota use, per Google's documentation).
+- **Contributed panoramas**: the nearest panorama is often a user-uploaded photo sphere (all four Paris landmarks
+  tested returned one). Panoramas not attributed exactly `© Google` or `© <year> Google` are labelled "Street View
+  photo by a contributor". The year in `© <year> Google` is a copyright year.
+- **Terms**: `official-api-own-key`.
+- **Tested**: Paris 14e street → 2025-07 (Google); Paris 15e → 2024-12 (contributor).
 
-## google-solar · Google Solar API
+## google-solar (Google Solar API)
 
-- **States**: the capture day of the aerial photo the Solar API analysed for the building nearest the point, its
-  quality and the distance to that building's centre.
-- **Source**: `buildingInsights:findClosest`, asking only for `imageryDate`, `imageryQuality` and `center`.
-- **Billed**: Google bills each request beyond its free tier, so it runs only when named in `providers`.
-- **Terms**: official-api-own-key.
-- **Checked**: the Palace of the Parliament, Bucharest → 2021-07-28, HIGH quality, 4 m from the point.
+- **Date**: capture day of the aerial image used for the building nearest the point; imagery quality; distance to the
+  building centre.
+- **Source**: `buildingInsights:findClosest` with `fields=imageryDate,imageryQuality,center`.
+- **Billing**: billed by Google beyond its free tier; queried only when listed in `providers`.
+- **Terms**: `official-api-own-key`.
+- **Tested**: Palace of the Parliament, Bucharest → 2021-07-28, quality HIGH, 4 m.
 
-## Left out, on purpose
+## Not supported
 
-- **Google Earth historical imagery**: dated, but read only through an undocumented internal format that Google's
-  terms do not allow.
-- **Google Maps satellite tiles**: no capture date is published, and fetching the tiles directly breaks the terms.
-- **Apple Maps**: no source of capture dates is known.
+- **Google Earth historical imagery**: dates are only available through an undocumented internal format not permitted
+  by Google's terms.
+- **Google Maps satellite tiles**: no capture date is published, and direct tile access is not permitted.
+- **Apple Maps**: no known source of capture dates.

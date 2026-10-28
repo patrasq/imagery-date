@@ -6,7 +6,7 @@
     <title>imagery-date · demo</title>
     <meta
       name="description"
-      content="Demo of the imagery-date library: click the map and see when each provider's photo there was taken: IGN France, swisstopo, Esri, Bing and Google, side by side."
+      content="Demo of imagery-date: click a point on the map to look up imagery capture dates from IGN France, swisstopo, Esri, Bing and Google."
     />
     <link
       rel="icon"
@@ -20,11 +20,8 @@
           <p class="badge">
             Demo of <a href="https://github.com/patrasq/imagery-date">imagery-date</a>, a library and CLI
           </p>
-          <h1>When was this map photo taken?</h1>
-          <p>
-            Click anywhere on the map. Every provider says when the photo it shows there was taken, exactly as precisely
-            as it publishes it.
-          </p>
+          <h1>Imagery capture dates</h1>
+          <p>Click a point on the map to query each provider for the capture date of its imagery there.</p>
         </header>
 
         <form id="options" class="options" autocomplete="off">
@@ -53,9 +50,8 @@
         <section id="results" class="results" aria-live="polite"></section>
 
         <footer class="footnote">
-          <p>A capture date is when the photo was taken, not proof the place still looks like that.</p>
           <p>
-            Requests go from your browser straight to each provider; a key never leaves it except to Google.
+            Requests go directly from the browser to each provider; a Google key is sent only to Google.
             <a href="https://github.com/patrasq/imagery-date">Source, library and CLI</a> ·
             <a href="https://github.com/patrasq/imagery-date/blob/main/PROVIDERS.md">Each provider's terms</a>
           </p>

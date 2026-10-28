@@ -15,7 +15,7 @@ import { bingCaptureRange } from './bing-capture-range.function.ts';
 
 /**
  * The capture range Bing states for the aerial tile at the point, read from the tile's headers with a HEAD request
- * (Bing exposes them to browsers on purpose). The zoom is capped at 19, where Bing's aerial layer is complete.
+ * (Bing lists them in Access-Control-Expose-Headers). The zoom is capped at 19, where Bing's aerial layer is complete.
  */
 export class BingProvider extends ImageryDateProvider {
   override readonly descriptor: ProviderDescriptor = BING.descriptor;

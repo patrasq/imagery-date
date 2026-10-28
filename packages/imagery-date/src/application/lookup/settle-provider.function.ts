@@ -30,8 +30,8 @@ const failureOutcome = (provider: ProviderIdValue, error: unknown): ProviderOutc
 };
 
 /**
- * Asks one provider and turns whatever happens into an outcome. It never rejects: one provider failing degrades the
- * report to the other providers' answers instead of failing the lookup (CONTRIBUTING.md, Failure).
+ * Asks one provider and turns the result into an outcome. It never rejects: a failing provider becomes a `failed`
+ * outcome and the other providers' answers are still reported (CONTRIBUTING.md, C12).
  */
 export async function settleProvider(plan: ProviderPlan, query: ProviderQuery): Promise<ProviderOutcome> {
   const provider = plan.provider.descriptor.id;

@@ -14,14 +14,13 @@ const reportJson = z.object({ newest: z.object({ date: z.object({ value: z.strin
 const providersJson = z.array(z.object({ id: z.string() }));
 
 describe('imagery-date <latitude> <longitude>', () => {
-  it('prints the newest photo, one row per provider and the caveat', async () => {
+  it('prints the newest photo and one row per provider', async () => {
     const { code, output } = await run(['48.853', '2.3499', '--providers', 'ign-france,bing']);
     expect(code).toBe(0);
-    expect(output).toContain('48.853, 2.3499 · zoom 19 · asked 2026-10-28T12:00:00.000Z');
+    expect(output).toContain('48.853, 2.3499 · zoom 19 · queried 2026-10-28T12:00:00.000Z');
     expect(output).toContain('Newest photo shown at this zoom: 2024-08-27 (IGN France BD ORTHO)');
     expect(output).toMatch(/IGN France BD ORTHO\s+found\s+2024-08-27\s+BD ORTHO 2024\s+0\.2 m/);
     expect(output).toMatch(/Bing Maps Aerial\s+found\s+2021-06-16\/2021-10-08\s+19/);
-    expect(output).toContain('not proof the place still looks like that');
   });
 
   it('prints the report as JSON with --json', async () => {
