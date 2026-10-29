@@ -7,6 +7,13 @@ updates:
     groups:
       toolchain:
         patterns: ['*']
+    ignore:
+      # Node's types follow the Node version in .nvmrc and package.json (22).
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+      # TypeScript 7 lacks the compiler API that typescript-eslint and scripts/one-export use (DECISIONS.md D-021).
+      - dependency-name: typescript
+        versions: ['>=7']
   - package-ecosystem: github-actions
     directory: /
     schedule:

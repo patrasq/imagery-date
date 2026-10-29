@@ -141,3 +141,11 @@ The FetchHttpClient spec talks to a local server. When the environment routes No
 corporate proxy, or the Codex sandbox, which sets `NODE_USE_ENV_PROXY=1` and a proxy that refuses loopback), that
 spec failed. `vitest.config.ts` adds `127.0.0.1` and `localhost` to `NO_PROXY` before workers start; no other request
 is affected.
+
+## D-021 · TypeScript stays on 6.x; Node types follow Node 22
+
+TypeScript 7.0 (the Go compiler) does not ship the JavaScript compiler API. `scripts/one-export` parses files with it,
+and typescript-eslint 8.72.1, the newest release, requires TypeScript below 6.1 (checked 2026-10-29). Dependabot
+therefore skips TypeScript 7; the ignore rule in `.github/dependabot.yml` is removed once typescript-eslint supports 7
+and the one-export check has a parser that does not need the old API. `@types/node` gets no major updates: its major
+stays the Node major in `.nvmrc` and `engines`, the Node the repository is built and tested with.
