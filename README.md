@@ -145,6 +145,35 @@ pnpm demo         # demo on http://localhost:5173
 Rules: [CONTRIBUTING.md](CONTRIBUTING.md). Design decisions: [DECISIONS.md](DECISIONS.md). Coding agents:
 [AGENTS.md](AGENTS.md).
 
+## Working on this repo with Codex
+
+| Path                 | What it does                                                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`          | Rules, commands and workflow, read at the start of every session. Its `Code Review Rules`, and those in the nested `AGENTS.md` of the providers, tests and demo, are what Codex code review checks for those files. |
+| `.agents/skills/`    | Fix a failing `pnpm verify` gate, add a provider, re-record provider responses, prepare a release (runs only when named).                                                                                           |
+| `.codex/config.toml` | Sandbox profiles. `imagery-date` (default): writes only inside the checkout, no `.env` reads, no outside hosts. `imagery-date-record`: the provider hosts only. Keys and tokens are removed from every command.     |
+| `.codex/rules/`      | Asks before live provider calls, `git push` and destructive git commands; refuses publish, tags, releases, force pushes, `--no-verify` and npm/yarn/bun installs. No rule runs a command outside the sandbox.       |
+| `.codex/hooks/`      | At session start, reports a wrong Node version or a missing install. When a turn ends with changes that have not passed `pnpm verify`, sends Codex back once to run it.                                             |
+| `.codex/agents/`     | Read-only reviewers: `provider_auditor` (provider data rules) and `api_compat_checker` (public API changes since the last tag).                                                                                     |
+| `pnpm check:codex`   | Loads the whole setup in Codex without a login and checks config, rule decisions, model input, sandbox profiles and hooks. CI runs it on Codex 0.165.0 and weekly on the newest release.                            |
+
+Codex loads `.codex/` only in a trusted project: trust the project when Codex asks, then approve the two hooks in
+`/hooks`.
+
+Two lessons from setting this up:
+
+- **Hooks run outside the sandbox.** A hook that calls a script Codex can edit, or that runs the tests, runs
+  agent-written code unsandboxed. The hooks here sit in `.codex/hooks/`, which the sandbox keeps read-only, import only
+  Node built-ins (a dependency-cruiser rule enforces it) and only compare git state. `pnpm verify` itself runs inside
+  the sandbox.
+- **GitHub's Ubuntu 24.04 runners block Codex's sandbox.** Codex reads `AGENTS.md` through bubblewrap, which needs
+  unprivileged user namespaces; Ubuntu 24.04 restricts them, and Codex fails with
+  `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`. One line before Codex runs fixes it:
+
+  ```sh
+  sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+  ```
+
 ## License
 
 MIT
